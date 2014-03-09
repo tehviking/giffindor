@@ -57,6 +57,6 @@ class GifPostsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def gif_post_params
-      params.require(:gif_post).permit(:title, :url, :description)
+      params.require(:gif_post).permit(:user_id, :url, :body)
     end
 end

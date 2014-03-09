@@ -73,6 +73,8 @@ GEM
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-ui-rails (4.2.0)
+      railties (>= 3.2.16)
     json (1.8.1)
     libv8 (3.16.14.3)
     mail (2.5.4)
@@ -154,6 +156,7 @@ DEPENDENCIES
   ember-rails
   ember-source (= 1.4)
   jquery-rails
+  jquery-ui-rails
   rails (= 4.0.3)
   sass-rails (~> 4.0.0)
   sdoc

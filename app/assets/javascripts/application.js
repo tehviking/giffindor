@@ -1,6 +1,9 @@
 //= require jquery
+//= require jquery_ujs
+//= require jquery.ui.all
 //= require handlebars
 //= require ember
 //= require ember-data
 //= require ic-ajax
 //= require app
+//= require main

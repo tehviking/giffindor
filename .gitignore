@@ -18,3 +18,5 @@
 /jspec/node_modules/
 /.projectile
 /jspec/npm-debug.log
+/.ruby-version
+/.ruby-gemset

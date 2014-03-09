@@ -5,12 +5,13 @@
   <%= stylesheet_link_tag    "application", media: "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+  <meta name="current-user-id" content="<%= current_user.id %>" />
 </head>
 <body>
   <div id="container">
     <div id="user_nav">
       <% if user_signed_in? %>
-        Logged in as <strong><%= current_user.email %></strong>.
+        Logged in as <strong><%= current_user.username %></strong>.
         <%= link_to 'Edit profile', edit_user_registration_path %> |
         <%= link_to "Logout", destroy_user_session_path, method: :delete %>
       <% else %>

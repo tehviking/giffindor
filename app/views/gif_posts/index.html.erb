@@ -1,6 +1,6 @@
 <h1>Listing gif_posts</h1>
 
-<table>
+<table class="gif-list">
   <thead>
     <tr>
       <th>User</th>
@@ -15,7 +15,7 @@
   <tbody>
     <% @gif_posts.each do |gif_post| %>
       <tr>
-        <td><%= gif_post.user %></td>
+        <td><%= gif_post.user.username %></td>
         <td><%= gif_post.url %></td>
         <td><%= gif_post.body %></td>
         <td><%= link_to 'Show', gif_post %></td>
@@ -28,4 +28,20 @@
 
 <br>
 
-<%= link_to 'New Gif post', new_gif_post_path %>
+<div id="share-section">
+  <div class="button-area">
+    <button id="toggle-post-dialog" class="share-button">
+      Submit a Gif
+    </button>
+  </div>
+</div>
+
+<div id="gif-post-dialog" class="share-dialog area" style="display:none;">
+  <span>Share a gif</span>
+  <div class="share-gif-form">
+    <textarea id="new-gif-body" name="new-gif-post" placeholder="Gif link with your message here"></textarea>
+    <button class="gif-submit" type="submit" href="<%= gif_posts_path %>">
+      Send
+    </button>
+  </div>
+</div>
