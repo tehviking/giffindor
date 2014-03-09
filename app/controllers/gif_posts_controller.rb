@@ -40,7 +40,7 @@ class GifPostsController < ApplicationController
     @gif_post.destroy
     respond_to do |format|
       format.html {redirect_to gif_posts_url}
-      format.json {render nothing: true}
+      format.json {render json: {message: "Post Deleted!"}, status: :ok}
     end
   end
 

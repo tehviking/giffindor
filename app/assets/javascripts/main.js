@@ -7,7 +7,7 @@ $(document).ready(function(){
     $("#gif-post-dialog button.gif-submit").attr("disabled", "disabled");
   });
 
-  $('#gif-post-dialog button.cancel-post').on("click", function(e) {
+  $('#gif-post-dialog').on("click", 'button.cancel-post', function(e) {
     e.preventDefault();
     $('#share-section .button-area').show('fade');
     $("#new-gif-body").val("");
@@ -37,7 +37,23 @@ $(document).ready(function(){
     $("#gif-post-dialog .character-count").text(charCount);
   });
 
-  $('#gif-post-dialog button.gif-submit').on("click", function(e) {
+  $('table.gif-list').on("click", "tr a[data-gif-delete]", function(e) {
+    e.preventDefault();
+    console.log(e);
+    var url = $(this).attr('href');
+    var id = $(this).data('gifPostId');
+    if(confirm('Are you sure you want to delete this post?')){
+      $.ajax({
+        type: "DELETE",
+        dataType: "json",
+        url: url
+      }).done(function(data) {
+        $('table.gif-list tr[data-gif-post-id=' + id.toString() + ']').remove();
+      });
+    }
+  });
+
+  $('#gif-post-dialog').on("click", 'button.gif-submit', function(e) {
     e.preventDefault();
     var currentUserId = $('meta[name="current-user-id"]').attr("content");
     $(this).attr("disabled", "disabled");
@@ -63,7 +79,7 @@ $(document).ready(function(){
       $('.share-gif-form').hide('fade');
       $("#gif-post-dialog .character-count").text("0");
       $('#gif-post-dialog .message').show().addClass("success").text("New gif posted: " + post.url);
-      var newRow = '<td>' + username + '</td><td><img src="' + url + '"></td><td>' + body + '</td><td><a href="/gif_posts/' + post.id + '">Show</a></td><td><a href="/gif_posts/' + post.id + '/edit">Edit</a></td><td><a data-confirm="Are you sure?" data-method="delete" href="/gif_posts/' + post.id + '" rel="nofollow">Destroy</a></td>';
+      var newRow = '<tr data-gif-row data-gif-post-id="' + post.id + '"><td>' + username + '</td><td><img src="' + url + '"></td><td>' + body + '</td><td><a href="/gif_posts/' + post.id + '">Show</a></td><td><a href="/gif_posts/' + post.id + '/edit">Edit</a></td><td><a data-gif-delete data-gif-post-id="' + post.id + '" href="/gif_posts/' + post.id + '" rel="nofollow">x</a></td></tr>';
       $('table.gif-list tbody').prepend(newRow);
       setTimeout(function() {
         $('#share-section .button-area').show('fade');

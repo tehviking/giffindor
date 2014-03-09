@@ -11,7 +11,6 @@
 
   <div id="gif-post-dialog" class="share-dialog area" style="display:none;">
     <div class="message"></div>
-    <span>Share a gif</span>
     <div class="share-gif-form">
       <textarea id="new-gif-body" name="new-gif-post" placeholder="Gif link with your message here"></textarea>
       <button class="gif-submit" type="submit" href="<%= gif_posts_path %>">
@@ -41,13 +40,13 @@
 
   <tbody>
     <% @gif_posts.each do |gif_post| %>
-      <tr>
+      <tr data-gif-row data-gif-post-id="<%= gif_post.id %>">
         <td><%= gif_post.user.username %></td>
         <td><%= image_tag(gif_post.url) %></td>
         <td><%= gif_post.body %></td>
         <td><%= link_to 'Show', gif_post %></td>
         <td><%= link_to 'Edit', edit_gif_post_path(gif_post) %></td>
-        <td><%= link_to 'Destroy', gif_post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><a href="<%= gif_post_path(gif_post) %>" data-gif-delete data-gif-post-id="<%= gif_post.id %>" rel="nofollow">x</a></td>
       </tr>
     <% end %>
   </tbody>
