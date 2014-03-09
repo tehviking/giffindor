@@ -11,6 +11,8 @@ $(document).ready(function(){
     $(this).hide("fade");
     var url = $(this).attr('href');
     var body = $("#new-gif-body").val();
+    parsedUrl = body.match(/(((ftp|https?):\/\/)(www\.)?|www\.)([\da-z-_\.]+)([a-z\.]{2,7})([\/\w\.-_\?\&]*)*\/?/);
+    console.log("parsedUrl:", parsedUrl);
     $.ajax({
       type: "POST",
       dataType: "json",
@@ -18,6 +20,7 @@ $(document).ready(function(){
       data: {
         gif_post: {
           body: body,
+          url: parsedUrl[0],
           user_id: currentUserId
         }
       }
@@ -30,7 +33,7 @@ $(document).ready(function(){
       $('.share-gif-form').hide('fade');
       $("#new-gif-body").val("");
       $('#gif-post-dialog').append("<p class='success-text'>New gif posted: " + post.url + "</p>");
-      var newRow = '<td>' + username + '</td><td>' + url + '</td><td>' + body + '</td><td><a href="/gif_posts/' + post.id + '">Show</a></td><td><a href="/gif_posts/' + post.id + '/edit">Edit</a></td><td><a data-confirm="Are you sure?" data-method="delete" href="/gif_posts/' + post.id + '" rel="nofollow">Destroy</a></td>';
+      var newRow = '<td>' + username + '</td><td><img src="' + url + '"></td><td>' + body + '</td><td><a href="/gif_posts/' + post.id + '">Show</a></td><td><a href="/gif_posts/' + post.id + '/edit">Edit</a></td><td><a data-confirm="Are you sure?" data-method="delete" href="/gif_posts/' + post.id + '" rel="nofollow">Destroy</a></td>';
       $('table.gif-list tbody').append(newRow);
       setTimeout(function() {
         $('#share-section .button-area').show('fade');

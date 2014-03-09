@@ -16,7 +16,7 @@
     <% @gif_posts.each do |gif_post| %>
       <tr>
         <td><%= gif_post.user.username %></td>
-        <td><%= gif_post.url %></td>
+        <td><%= image_tag(gif_post.url) %></td>
         <td><%= gif_post.body %></td>
         <td><%= link_to 'Show', gif_post %></td>
         <td><%= link_to 'Edit', edit_gif_post_path(gif_post) %></td>
