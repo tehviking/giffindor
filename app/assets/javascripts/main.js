@@ -51,7 +51,6 @@ $(document).ready(function(){
         gif_post: {
           body: body,
           url: parsedUrl[0],
-          user_id: currentUserId
         }
       }
     }).done(function(data) {

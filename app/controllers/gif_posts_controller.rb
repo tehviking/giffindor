@@ -1,6 +1,7 @@
 class GifPostsController < ApplicationController
   before_filter :authenticate_user!, except: [:index, :show]
-  before_action :set_gif_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_gif_post, only: [:show]
+  before_action :set_current_user_gif_post, only: [:edit, :update, :destroy]
   respond_to :json, :html
   # GET /gif_posts
   def index
@@ -14,7 +15,7 @@ class GifPostsController < ApplicationController
 
   # GET /gif_posts/new
   def new
-    @gif_post = GifPost.new
+    @gif_post = current_user.gif_posts.new
   end
 
   # GET /gif_posts/1/edit
@@ -23,7 +24,7 @@ class GifPostsController < ApplicationController
 
   # POST /gif_posts
   def create
-    @gif_post = GifPost.create(gif_post_params)
+    @gif_post = current_user.gif_posts.create(gif_post_params)
     respond_with @gif_post
   end
 
@@ -55,8 +56,12 @@ class GifPostsController < ApplicationController
       @gif_post = GifPost.find(params[:id])
     end
 
+    def set_current_user_gif_post
+      @gif_post = current_user.gif_posts.find(params[:id])
+    end
+
     # Only allow a trusted parameter "white list" through.
     def gif_post_params
-      params.require(:gif_post).permit(:user_id, :url, :body)
+      params.require(:gif_post).permit(:url, :body)
     end
 end

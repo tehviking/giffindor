@@ -5,4 +5,5 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable
   # Setup accessible (or protected) attributes for your model
   validates_presence_of :username
+  has_many :gif_posts
 end
