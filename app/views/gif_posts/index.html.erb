@@ -1,0 +1,31 @@
+<h1>Listing gif_posts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Url</th>
+      <th>Body</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @gif_posts.each do |gif_post| %>
+      <tr>
+        <td><%= gif_post.user %></td>
+        <td><%= gif_post.url %></td>
+        <td><%= gif_post.body %></td>
+        <td><%= link_to 'Show', gif_post %></td>
+        <td><%= link_to 'Edit', edit_gif_post_path(gif_post) %></td>
+        <td><%= link_to 'Destroy', gif_post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Gif post', new_gif_post_path %>

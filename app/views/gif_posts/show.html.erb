@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @gif_post.user %>
+</p>
+
+<p>
+  <strong>Url:</strong>
+  <%= @gif_post.url %>
+</p>
+
+<p>
+  <strong>Body:</strong>
+  <%= @gif_post.body %>
+</p>
+
+<%= link_to 'Edit', edit_gif_post_path(@gif_post) %> |
+<%= link_to 'Back', gif_posts_path %>
