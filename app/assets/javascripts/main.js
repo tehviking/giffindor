@@ -3,14 +3,29 @@ $(document).ready(function(){
     e.preventDefault();
     $('#share-section .button-area').hide('fade');
     $('#gif-post-dialog').show('blind');
+    $("#gif-post-dialog button.gif-submit").attr("disabled", "disabled");
   });
 
   $('#gif-post-dialog button.cancel-post').on("click", function(e) {
     e.preventDefault();
-    $('.button.gif-submit').show('fade');
+    $('button.gif-submit').show('fade');
     $('#share-section .button-area').show('fade');
     $("#new-gif-body").val("");
     $('#gif-post-dialog').hide('blind');
+  });
+
+  $('#new-gif-body').bind("input propertychange", function(e) {
+    var parsedUrl = $(this).val().match(/(((ftp|https?):\/\/)(www\.)?|www\.)([\da-z-_\.]+)([a-z\.]{2,7})([\/\w\.-_\?\&]*)*\/?/);
+    var isGif = !!parsedUrl ? /.gif$/.test(parsedUrl[0]) : null;
+    if (!!isGif) {
+      $("#gif-post-dialog button.gif-submit").removeAttr("disabled");
+      $('#gif-post-dialog .message').text("")
+      $('#gif-post-dialog .message').hide()
+    } else {
+      $('#gif-post-dialog .message').show()
+      $('#gif-post-dialog .message').text("There is no valid gif link in this post.")
+      $("#gif-post-dialog button.gif-submit").attr("disabled", "disabled");
+    }
   });
 
   $('#gif-post-dialog button.gif-submit').on("click", function(e) {
@@ -19,7 +34,7 @@ $(document).ready(function(){
     $(this).hide("fade");
     var url = $(this).attr('href');
     var body = $("#new-gif-body").val();
-    parsedUrl = body.match(/(((ftp|https?):\/\/)(www\.)?|www\.)([\da-z-_\.]+)([a-z\.]{2,7})([\/\w\.-_\?\&]*)*\/?/);
+    var parsedUrl = body.match(/(((ftp|https?):\/\/)(www\.)?|www\.)([\da-z-_\.]+)([a-z\.]{2,7})([\/\w\.-_\?\&]*)*\/?/);
     console.log("parsedUrl:", parsedUrl);
     $.ajax({
       type: "POST",
