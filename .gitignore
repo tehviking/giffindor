@@ -20,3 +20,4 @@
 /jspec/npm-debug.log
 /.ruby-version
 /.ruby-gemset
+/app/assets/stylesheets/.sass-cache/
