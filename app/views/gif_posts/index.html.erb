@@ -1,4 +1,27 @@
-<h1>Listing gif_posts</h1>
+<h1>Recent Gif Posts</h1>
+
+<div id="share-section">
+  <div class="button-area">
+    <button id="toggle-post-dialog" class="share-button">
+      Submit a Gif
+    </button>
+  </div>
+</div>
+
+<div id="gif-post-dialog" class="share-dialog area" style="display:none;">
+  <span>Share a gif</span>
+  <div class="share-gif-form">
+    <textarea id="new-gif-body" name="new-gif-post" placeholder="Gif link with your message here"></textarea>
+    <button class="gif-submit" type="submit" href="<%= gif_posts_path %>">
+      Send
+    </button>
+    <button class="cancel-post">
+      Cancel
+    </button>
+  </div>
+</div>
+
+<br><br>
 
 <table class="gif-list">
   <thead>
@@ -27,21 +50,3 @@
 </table>
 
 <br>
-
-<div id="share-section">
-  <div class="button-area">
-    <button id="toggle-post-dialog" class="share-button">
-      Submit a Gif
-    </button>
-  </div>
-</div>
-
-<div id="gif-post-dialog" class="share-dialog area" style="display:none;">
-  <span>Share a gif</span>
-  <div class="share-gif-form">
-    <textarea id="new-gif-body" name="new-gif-post" placeholder="Gif link with your message here"></textarea>
-    <button class="gif-submit" type="submit" href="<%= gif_posts_path %>">
-      Send
-    </button>
-  </div>
-</div>

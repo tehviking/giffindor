@@ -5,7 +5,15 @@ $(document).ready(function(){
     $('#gif-post-dialog').show('blind');
   });
 
-  $('button.gif-submit').on("click", function(e) {
+  $('#gif-post-dialog button.cancel-post').on("click", function(e) {
+    e.preventDefault();
+    $('.button.gif-submit').show('fade');
+    $('#share-section .button-area').show('fade');
+    $("#new-gif-body").val("");
+    $('#gif-post-dialog').hide('blind');
+  });
+
+  $('#gif-post-dialog button.gif-submit').on("click", function(e) {
     e.preventDefault();
     var currentUserId = $('meta[name="current-user-id"]').attr("content");
     $(this).hide("fade");

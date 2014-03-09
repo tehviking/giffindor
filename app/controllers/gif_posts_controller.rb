@@ -4,7 +4,7 @@ class GifPostsController < ApplicationController
   respond_to :json, :html
   # GET /gif_posts
   def index
-    @gif_posts = GifPost.all
+    @gif_posts = GifPost.order("created_at DESC").all
   end
 
   # GET /gif_posts/1
