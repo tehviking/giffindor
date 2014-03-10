@@ -34,10 +34,10 @@ $(document).ready(function(){
       $('#gif-post-dialog .gif-preview').remove()
       $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
     }
-    $("#gif-post-dialog .character-count").text(charCount);
+    $("#gif-post-dialog .character-count-number").text(charCount);
   });
 
-  $('table.gif-list').on("click", "tr a[data-gif-delete]", function(e) {
+  $('section.gif-list').on("click", "article a[data-gif-delete]", function(e) {
     e.preventDefault();
     console.log(e);
     var url = $(this).attr('href');
@@ -48,7 +48,7 @@ $(document).ready(function(){
         dataType: "json",
         url: url
       }).done(function(data) {
-        $('table.gif-list tr[data-gif-post-id=' + id.toString() + ']').remove();
+        $('section.gif-list article[data-gif-post-id=' + id.toString() + ']').remove();
       });
     }
   });
@@ -77,10 +77,10 @@ $(document).ready(function(){
       var body = post.body || null;
       $('#gif-post-dialog .message').removeClass("error").text("");
       $('.share-gif-form').hide('fade');
-      $("#gif-post-dialog .character-count").text("0");
+      $("#gif-post-dialog .character-count-number").text("0");
       $('#gif-post-dialog .message').show().addClass("success").text("New gif posted: " + post.url);
-      var newRow = '<tr data-gif-row data-gif-post-id="' + post.id + '"><td>' + username + '</td><td><img src="' + url + '"></td><td>' + body + '</td><td><a href="/gif_posts/' + post.id + '">Show</a></td><td><a href="/gif_posts/' + post.id + '/edit">Edit</a></td><td><a data-gif-delete data-gif-post-id="' + post.id + '" href="/gif_posts/' + post.id + '" rel="nofollow">x</a></td></tr>';
-      $('table.gif-list tbody').prepend(newRow);
+      var newArticle = '<article data-gif-entry data-gif-post-id="' + post.id + '"><div class="gif-entry-image"><img class="framed" src="' + url + '"></div><div class="gif-entry-body">' + body + '</div><div class="gif-entry-user">Shared by ' + username + '</div><div class="gif-entry-permalink"><a href="/gif_posts/' + post.id + '">Permalink</a></div><div class="gif-entry-delete"><a class="btn btn-danger"data-gif-delete data-gif-post-id="' + post.id + '" href="/gif_posts/' + post.id + '" rel="nofollow">Delete</a></div></article>';
+      $('section.gif-list').prepend(newArticle);
       setTimeout(function() {
         $('#share-section .button-area').show('fade');
         $('#gif-post-dialog .message').hide().text("");

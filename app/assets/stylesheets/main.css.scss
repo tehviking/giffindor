@@ -1,4 +1,15 @@
 @import 'variables';
+@import url(http://fonts.googleapis.com/css?family=IM+Fell+Great+Primer:400,400italic);
+
+body {
+  background-color: #f8fbf2;
+}
+body, h1, h2, h3, h4, h5, h6, p, a {
+  font-family: 'IM Fell Great Primer', serif;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
 
 .navbar.gryffindor-striped {
   @include diagonal_lines_pattern($maroon, $gold);
@@ -20,5 +31,54 @@
     background-position: left top;
     height: 150px;
     width: 120px;
+  }
+}
+
+img.framed {
+  border-image: image-url('frame.png') 93 92 87 92 stretch stretch; 
+  border-color: #f4be52; 
+  border-style: inset; 
+  border-width: 60px; 
+  background-color: #ffe; 
+}
+
+#share-section {
+  .button-area {
+    margin-bottom: 20px;
+  }
+}
+
+.share-dialog {
+  width: 50%;
+  background-color: white;
+  border-radius: 6px;
+  padding: 16px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  .title {
+    margin: 0;
+    margin-bottom: 10px;
+  }
+  .character-count {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+    float: right;
+  }
+  textarea {
+    border-radius: 6px;
+    width: 70%;
+    float: left;
+  }
+  .gif-preview-container {
+    width: 25%;
+    float:right;
+  }
+  .gif-input-container {
+    margin-bottom: 10px;
+    clear: both;
+  }
+  .gif-input-actions {
+    float: left;
   }
 }

@@ -1,55 +1,50 @@
 <h1>Recent Gif Posts</h1>
 
 <% if current_user %>
-  <div id="share-section">
-    <div class="button-area">
-      <a class="btn btn-success" id="toggle-post-dialog" class="share-button">
-        Submit a Gif
-      </a>
-    </div>
+<div id="share-section">
+  <div class="button-area">
+    <a class="btn btn-success" id="toggle-post-dialog" class="share-button">
+      Submit a Gif
+    </a>
   </div>
+</div>
 
-  <div id="gif-post-dialog" class="share-dialog area" style="display:none;">
-    <div class="message"></div>
-    <div class="share-gif-form">
+<div id="gif-post-dialog" class="share-dialog" style="display:none;">
+  <h3 class="title">Share a gif</h3>
+  <div class="message"></div>
+  <div class="share-gif-form">
+    <div class="gif-input-container">
       <textarea id="new-gif-body" name="new-gif-post" placeholder="Gif link with your message here"></textarea>
+      <div class="gif-preview-container"></div>
+      <div style="clear:both;"></div>
+    </div>
+    <div style="clear:both;"></div>
+    <div class="gif-input-actions">
       <a class="btn btn-primary gif-submit" type="submit" href="<%= gif_posts_path %>">
-        Send
+        Post
       </a>
       <a class="btn btn-default cancel-post">
         Cancel
       </a>
-      <h3 class="character-count">0</h3>
-      <div class="gif-preview-container"></div>
     </div>
+    <p class="character-count"><span class="character-count-number">0</span></p>
+    <div style="clear:both;"></div>
   </div>
-
-  <br><br>
+</div>
 <% end %>
-<table class="gif-list">
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Url</th>
-      <th>Body</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @gif_posts.each do |gif_post| %>
-      <tr data-gif-row data-gif-post-id="<%= gif_post.id %>">
-        <td><%= gif_post.user.username %></td>
-        <td><%= image_tag(gif_post.url) %></td>
-        <td><%= gif_post.body %></td>
-        <td><%= link_to 'Show', gif_post %></td>
-        <td><%= link_to 'Edit', edit_gif_post_path(gif_post) %></td>
-        <td><a href="<%= gif_post_path(gif_post) %>" data-gif-delete data-gif-post-id="<%= gif_post.id %>" rel="nofollow">x</a></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<section class="gif-list">
+  <% @gif_posts.each do |gif_post| %>
+  <article data-gif-entry data-gif-post-id="<%= gif_post.id %>">
+    <div class="gif-entry-image"><%= image_tag(gif_post.url, class: "framed") %></div>
+    <div class="gif-entry-body"><%= gif_post.body %></div>
+    <div class="gif-entry-user">Shared by <%= gif_post.user.username %></div>
+    <div class="gif-entry-permalink"><%= link_to 'Permalink', gif_post %></div>
+    <div class="gif-entry-delete">
+      <a href="<%= gif_post_path(gif_post) %>" data-gif-delete data-gif-post-id="<%= gif_post.id %>" class="btn btn-danger" rel="nofollow">Delete</a>
+    </div>
+  </article>
+  <% end %>
+</section>
 
 <br>
