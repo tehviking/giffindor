@@ -4,10 +4,10 @@ $(document).ready(function(){
     $("#new-gif-body").val("");
     $('#share-section .button-area').hide('fade');
     $('#gif-post-dialog').show('blind');
-    $("#gif-post-dialog button.gif-submit").attr("disabled", "disabled");
+    $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
   });
 
-  $('#gif-post-dialog').on("click", 'button.cancel-post', function(e) {
+  $('#gif-post-dialog').on("click", 'a.cancel-post', function(e) {
     e.preventDefault();
     $('#share-section .button-area').show('fade');
     $("#new-gif-body").val("");
@@ -21,18 +21,18 @@ $(document).ready(function(){
     if (!!isGif) {
       charCount = ($(this).val().length - parsedUrl[0].length)
       if (charCount <= 140) {
-        $("#gif-post-dialog button.gif-submit").removeAttr("disabled");
+        $("#gif-post-dialog a.gif-submit").removeAttr("disabled");
         $('#gif-post-dialog .message').text("").removeClass("error").hide();
         $('#gif-post-dialog .gif-preview-container').html('<div class="gif-preview"><img src="' + parsedUrl[0] + '" width="90"></div>')
      } else {
        $('#gif-post-dialog .message').show().addClass("validation-error").text("Your message is too long.");
-       $("#gif-post-dialog button.gif-submit").attr("disabled", "disabled");
+       $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
      }
     } else {
       charCount = $(this).val().length
       $('#gif-post-dialog .message').show().addClass("validation-error").text("There is no valid gif link in this post.")
       $('#gif-post-dialog .gif-preview').remove()
-      $("#gif-post-dialog button.gif-submit").attr("disabled", "disabled");
+      $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
     }
     $("#gif-post-dialog .character-count").text(charCount);
   });
@@ -53,7 +53,7 @@ $(document).ready(function(){
     }
   });
 
-  $('#gif-post-dialog').on("click", 'button.gif-submit', function(e) {
+  $('#gif-post-dialog').on("click", 'a.gif-submit', function(e) {
     e.preventDefault();
     var currentUserId = $('meta[name="current-user-id"]').attr("content");
     $(this).attr("disabled", "disabled");
@@ -96,7 +96,7 @@ $(document).ready(function(){
       }
       setTimeout(function() {
         $('#gif-post-dialog .message').removeClass("error").hide();
-        $("#gif-post-dialog button.gif-submit").removeAttr("disabled");
+        $("#gif-post-dialog a.gif-submit").removeAttr("disabled");
       }, 5000);
     });
   });

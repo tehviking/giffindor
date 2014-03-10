@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Giffindor</title>
-  <%= stylesheet_link_tag    "application", media: "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-  <meta name="current-user-id" content="<%= current_user.id if current_user%>" />
-</head>
-<body>
-  <div id="container">
-    <div id="user_nav">
-      <% if user_signed_in? %>
-        Logged in as <strong><%= current_user.username %></strong>.
-        <%= link_to 'Edit profile', edit_user_registration_path %> |
-        <%= link_to "Logout", destroy_user_session_path, method: :delete %>
-      <% else %>
-        <%= link_to "Sign up", new_user_registration_path %> |
-        <%= link_to "Login", new_user_session_path %>
-      <% end %>
-    </div>
+  <head>
+    <title>Giffindor</title>
+    <%= stylesheet_link_tag    "application", media: "all" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+    <meta name="current-user-id" content="<%= current_user.id if current_user%>" />
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-static-top gryffindor-striped" role="navigation">
+      <div class="container">
+        <a class="navbar-brand navbar-logo" href="#"></a>
+        <ul class="nav navbar-nav navbar-right">
+          <% if user_signed_in? %>
+            <p class="navbar-text">Signed in as <%= current_user.username %></p>
+            <li><%= link_to 'My profile', edit_user_registration_path %></li>
+            <li><%= link_to "Logout", destroy_user_session_path, method: :delete %></li>
+          <% else %>
+            <p class="navbar-text">Not signed in</p>
+            <li><%= link_to "Sign up", new_user_registration_path %></li>
+            <li><%= link_to "Login", new_user_session_path %></li>
+          <% end %>
+        </ul>
+      </div>
+    </nav>
 
     <% flash.each do |name, msg| %>
       <%= content_tag :div, msg, id: "flash_#{name}" %>
     <% end %>
 
-    <%= yield %>
-  </div>
+    <div class="container">
+      <%= yield %>
+    </div>
 
-</body>
+  </body>
 </html>

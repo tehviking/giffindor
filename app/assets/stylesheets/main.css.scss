@@ -1,2 +1,24 @@
-body {
+@import 'variables';
+
+.navbar.gryffindor-striped {
+  @include diagonal_lines_pattern($maroon, $gold);
+  a, p, navbar-text, li a {
+    color: white;
+  }
+  height: 50px;
+  margin-bottom: 90px;
+}
+
+.navbar {
+  .navbar-brand {
+    margin: 0;
+  }
+  .navbar-logo {
+    background: image-url("giffindor-logo.png") no-repeat;
+    background-size: 100%;
+    background-color: transparent;
+    background-position: left top;
+    height: 150px;
+    width: 120px;
+  }
 }
