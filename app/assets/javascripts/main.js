@@ -14,7 +14,7 @@ $(document).ready(function(){
     $('#gif-post-dialog').hide('blind');
   });
 
-  $('#new-gif-body').bind("input propertychange", function(e) {
+  $('#new-gif-body').on("input propertychange", function(e) {
     var parsedUrl = $(this).val().match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/);
     var isGif = !!parsedUrl ? /.gif$/.test(parsedUrl) : null;
     var charCount
@@ -79,7 +79,7 @@ $(document).ready(function(){
       $('.share-gif-form').hide('fade');
       $("#gif-post-dialog .character-count-number").text("0");
       $('#gif-post-dialog .message').show().addClass("success").text("New gif posted: " + post.url);
-      var newArticle = '<article data-gif-entry data-gif-post-id="' + post.id + '"><div class="gif-entry-image"><img class="framed" src="' + url + '"></div><div class="gif-entry-body">' + body + '</div><div class="gif-entry-user">Shared by ' + username + '</div><div class="gif-entry-permalink"><a href="/gif_posts/' + post.id + '">Permalink</a></div><div class="gif-entry-delete"><a class="btn btn-danger"data-gif-delete data-gif-post-id="' + post.id + '" href="/gif_posts/' + post.id + '" rel="nofollow">Delete</a></div></article>';
+      var newArticle = '<article class="gif-entry" data-gif-entry data-gif-post-id="' + post.id + '"><div class="gif-entry-image"><img class="framed" src="' + url + '"></div><div class="gif-entry-body">' + body + '</div><div class="gif-entry-delete"><a class="btn btn-danger"data-gif-delete data-gif-post-id="' + post.id + '" href="/gif_posts/' + post.id + '" rel="nofollow">Delete</a></div><div class="gif-entry-user">Shared by ' + username + '</div><div class="gif-entry-permalink"><a href="/gif_posts/' + post.id + '">Permalink</a></div><div style="clear:both;"></div></article>';
       $('section.gif-list').prepend(newArticle);
       setTimeout(function() {
         $('#share-section .button-area').show('fade');

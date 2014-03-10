@@ -1,50 +1,64 @@
-<h1>Recent Gif Posts</h1>
+<div class="row headline">
+  <div class="col-md-8 col-sm-8 col-md-offset-2">
+    <h1>
+      <span>Recently Shared Gifs</span>
+      <% if current_user %>
+        <span id="share-section">
+          <div class="button-area">
+            <a class="btn btn-success" id="toggle-post-dialog" class="share-button">
+              Submit a Gif
+            </a>
+          </div>
+        </span>
+      <% end %>
+    </h1>
+  </div>
+</div>
 
 <% if current_user %>
-<div id="share-section">
-  <div class="button-area">
-    <a class="btn btn-success" id="toggle-post-dialog" class="share-button">
-      Submit a Gif
-    </a>
-  </div>
-</div>
-
-<div id="gif-post-dialog" class="share-dialog" style="display:none;">
-  <h3 class="title">Share a gif</h3>
-  <div class="message"></div>
-  <div class="share-gif-form">
-    <div class="gif-input-container">
-      <textarea id="new-gif-body" name="new-gif-post" placeholder="Gif link with your message here"></textarea>
-      <div class="gif-preview-container"></div>
-      <div style="clear:both;"></div>
+  <div class="row">
+    <div class="col-md-8 col-sm-8 col-md-offset-2">
+      <div id="gif-post-dialog" class="share-dialog" style="display:none;">
+        <h3 class="title">Share a gif</h3>
+        <div class="message"></div>
+        <div class="share-gif-form">
+          <div class="gif-input-container">
+            <textarea id="new-gif-body" name="new-gif-post" placeholder="Gif link with your message here"></textarea>
+            <div class="gif-preview-container"></div>
+            <div style="clear:both;"></div>
+          </div>
+          <div style="clear:both;"></div>
+          <div class="gif-input-actions">
+            <a class="btn btn-primary gif-submit" type="submit" href="<%= gif_posts_path %>">
+              Post
+            </a>
+            <a class="btn btn-default cancel-post">
+              Cancel
+            </a>
+          </div>
+          <p class="character-count"><span class="character-count-number">0</span></p>
+          <div style="clear:both;"></div>
+        </div>
+      </div>
     </div>
-    <div style="clear:both;"></div>
-    <div class="gif-input-actions">
-      <a class="btn btn-primary gif-submit" type="submit" href="<%= gif_posts_path %>">
-        Post
-      </a>
-      <a class="btn btn-default cancel-post">
-        Cancel
-      </a>
-    </div>
-    <p class="character-count"><span class="character-count-number">0</span></p>
-    <div style="clear:both;"></div>
   </div>
-</div>
 <% end %>
 
-<section class="gif-list">
-  <% @gif_posts.each do |gif_post| %>
-  <article data-gif-entry data-gif-post-id="<%= gif_post.id %>">
-    <div class="gif-entry-image"><%= image_tag(gif_post.url, class: "framed") %></div>
-    <div class="gif-entry-body"><%= gif_post.body %></div>
-    <div class="gif-entry-user">Shared by <%= gif_post.user.username %></div>
-    <div class="gif-entry-permalink"><%= link_to 'Permalink', gif_post %></div>
-    <div class="gif-entry-delete">
-      <a href="<%= gif_post_path(gif_post) %>" data-gif-delete data-gif-post-id="<%= gif_post.id %>" class="btn btn-danger" rel="nofollow">Delete</a>
-    </div>
-  </article>
-  <% end %>
-</section>
-
-<br>
+<div class="row">
+  <div class="col-md-8 col-sm-8 col-md-offset-2">
+    <section class="gif-list">
+      <% @gif_posts.each do |gif_post| %>
+        <article class="gif-entry" data-gif-entry data-gif-post-id="<%= gif_post.id %>">
+          <div class="gif-entry-image"><%= image_tag(gif_post.url, class: "framed") %></div>
+          <p class="gif-entry-body"><%= gif_post.body %></p>
+          <div class="gif-entry-delete">
+            <a href="<%= gif_post_path(gif_post) %>" data-gif-delete data-gif-post-id="<%= gif_post.id %>" class="btn btn-danger" rel="nofollow">Delete</a>
+          </div>
+          <p class="gif-entry-user">Shared by <%= gif_post.user.username %></p>
+          <p class="gif-entry-permalink"><%= link_to 'Permalink', gif_post %></p>
+          <div style="clear:both;"></div>
+        </article>
+      <% end %>
+    </section>
+  </div>
+</div>

@@ -43,13 +43,15 @@ img.framed {
 }
 
 #share-section {
+  float: right;
   .button-area {
     margin-bottom: 20px;
   }
 }
-
+.row.headline {
+  margin-top: 10px;
+}
 .share-dialog {
-  width: 50%;
   background-color: white;
   border-radius: 6px;
   padding: 16px;
@@ -80,5 +82,29 @@ img.framed {
   }
   .gif-input-actions {
     float: left;
+  }
+}
+
+section.gif-list {
+  article.gif-entry {
+    border-bottom: 1px solid #ccc;
+    margin: 10px 0;
+    .gif-entry-image img {
+      width: 617px;
+    }
+    .gif-entry-body {
+      font-size: 20px;
+    }
+    .gif-entry-delete {
+      float: right;
+      margin-bottom: 10px;
+    }
+    .gif-entry-user {
+      float: left;
+    }
+    .gif-entry-permalink {
+      float: left;
+      clear: left;
+    }
   }
 }
