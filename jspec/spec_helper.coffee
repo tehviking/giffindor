@@ -7,6 +7,10 @@ App.injectTestHelpers()
 window.start = ->
 window.stop = ->
 
-beforeEach ->
-  App.reset()
-  @store = App.__container__.lookup("store:main")
+beforeEachWithoutEmberRun = this.beforeEach
+this.beforeEach = (fn)->
+  beforeEachWithoutEmberRun -> Ember.run => fn.call(this)
+
+afterEachWithoutEmberRun = this.afterEach
+this.afterEach = (fn)->
+  afterEachWithoutEmberRun -> Ember.run => fn.call(this)

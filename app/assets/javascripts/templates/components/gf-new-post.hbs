@@ -1,0 +1,41 @@
+<div class="row headline">
+  <div class="col-md-8 col-sm-8 col-md-offset-2">
+    <h1>
+      <span>Recently Shared Gifs</span>
+      <span id="share-section">
+        <div class="button-area">
+          <a class="btn btn-success" id="toggle-post-dialog" class="share-button">
+            Submit a Gif
+          </a>
+        </div>
+      </span>
+    </h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8 col-sm-8 col-md-offset-2">
+    <div id="gif-post-dialog" class="share-dialog" style="display:none;">
+      <h3 class="title">Share a gif</h3>
+      <div class="message"></div>
+      <div class="share-gif-form">
+        <div class="gif-input-container">
+          <textarea id="new-gif-body" name="new-gif-post" placeholder="Gif link with your message here"></textarea>
+          <div class="gif-preview-container"></div>
+          <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+        <div class="gif-input-actions">
+          <a class="btn btn-primary gif-submit" type="submit" href="/gif_posts">
+            Post
+          </a>
+          <a class="btn btn-default cancel-post">
+            Cancel
+          </a>
+        </div>
+        <p class="character-count"><span class="character-count-number">0</span></p>
+        <div style="clear:both;"></div>
+      </div>
+    </div>
+  </div>
+</div>
