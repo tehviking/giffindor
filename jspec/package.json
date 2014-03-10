@@ -9,5 +9,8 @@
     "karma-mocha": "*",
     "karma-chai": "*",
     "karma": "0.10.9"
+  },
+  "devDependencies": {
+    "karma-sinon-chai": "~0.1.4"
   }
 }

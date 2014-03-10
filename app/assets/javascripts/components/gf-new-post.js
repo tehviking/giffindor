@@ -15,7 +15,7 @@ App.GfNewPostComponent = Ember.Component.extend({
         e.preventDefault();
         $('#share-section .button-area').show('fade');
         $("#new-gif-body").val("");
-        $('#gif-post-dialog').hide('blind');
+        $('#gif-post-dialog').hide();
       });
 
       $('#new-gif-body').on("input propertychange", function(e) {
