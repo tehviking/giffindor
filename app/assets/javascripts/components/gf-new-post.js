@@ -45,7 +45,6 @@ App.GfNewPostComponent = Ember.Component.extend({
 
     $('section.gif-list').on("click", "article a[data-gif-delete]", function(e) {
       e.preventDefault();
-      console.log(e);
       var url = $(this).attr('href');
       var id = $(this).data('gifPostId');
       if(confirm('Are you sure you want to delete this post?')){

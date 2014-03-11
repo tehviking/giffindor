@@ -1,8 +1,10 @@
 describe 'new post component', ->
   beforeEach ->
+    @gifList = $('<section class="gif-list"></section>').appendTo("body");
     @component = App.GfNewPostComponent.create().append()
     @component.container = App.__container__
   afterEach ->
+    @gifList.remove()
     @component.destroy()
   it "exists", ->
     expect(@component.get('element')).to.exist
@@ -66,7 +68,6 @@ describe 'new post component', ->
           describe "clicking submit with good response", ->
             beforeEach ->
               @clock = sinon.useFakeTimers()
-              @component.$().append('<section class="gif-list"></section>')
               @component.$("a.gif-submit").attr("href", "/gif_posts").click();
               ic.ajax.defineFixture '/gif_posts',
                 response:
@@ -82,14 +83,12 @@ describe 'new post component', ->
             afterEach ->
               @clock.restore()
 
-            it "adds success class and shows message", ->
+            it "shows success message and adds gif", ->
               expect(@component.$("#gif-post-dialog .message")).to.be.visible
               expect(@component.$("#gif-post-dialog .message")).to.have.class "success"
               expect(@component.$("#gif-post-dialog .message").text()).to.equal "New gif posted: http://blah.com/cool-gif.gif"
-            it "adds the gif to the list", ->
-              @newGif = @component.$("section.gif-list article.gif-entry")
-              expect(@newGif).to.exist
-              expect($(@newGif[0]).find(".gif-entry-user").text()).to.equal "Shared by fakeuser"
+              newGif = $("section.gif-list article.gif-entry")
+              expect($(newGif[0]).find(".gif-entry-user").text()).to.equal "Shared by fakeuser"
             describe "after 5 seconds", ->
               beforeEach ->
                 @clock.tick(5010)
@@ -97,6 +96,22 @@ describe 'new post component', ->
                 expect(@component.$("#gif-post-dialog .message")).not.to.be.visible
                 expect(@component.$("#gif-post-dialog .message")).not.to.have.class "success"
                 expect(@component.$("#gif-post-dialog .message").text()).to.equal ""
+
+              describe "deleting the gif with success response", ->
+                beforeEach ->
+                  ic.ajax.defineFixture '/gif_posts/1',
+                    response: "yay"
+                    jqXHR: {}
+                    textStatus: 'success'
+                  sinon.stub(window, "confirm").returns(true)
+                  @newGif = $("section.gif-list article.gif-entry")
+                  @deleteButton = $(@newGif).find(".gif-entry-delete [data-gif-delete]")
+                  $(@deleteButton).trigger("click")
+
+                afterEach ->
+                  window.confirm.restore()
+                it "removes the gif", ->
+                  expect($("section.gif-list article.gif-entry")).not.to.exist
 
           describe "clicking submit with validation error", ->
             beforeEach ->
