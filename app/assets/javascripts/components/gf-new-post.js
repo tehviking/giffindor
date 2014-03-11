@@ -64,7 +64,6 @@ App.GfNewPostComponent = Ember.Component.extend({
 
   observeInputChanges: function(){
     if (!!this.get("gifPost.isGif")) {
-      $('#gif-post-dialog .gif-preview-container').html('<div class="gif-preview"><img src="' + this.get("gifPost.parsedUrl") + '" width="90"></div>')
       if (this.get("gifPost.isValid")) {
         $("#gif-post-dialog a.gif-submit").removeAttr("disabled");
         $('#gif-post-dialog .message').text("").removeClass("error").removeClass("validation-error").hide();
@@ -74,7 +73,6 @@ App.GfNewPostComponent = Ember.Component.extend({
       }
     } else {
       $('#gif-post-dialog .message').show().addClass("validation-error").text("There is no valid gif link in this post.")
-      $('#gif-post-dialog .gif-preview').remove()
       $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
     }
   }.observes("gifPost.body", "gifPost.isValid"),
@@ -110,7 +108,6 @@ App.GfNewPostComponent = Ember.Component.extend({
           console.log("running set-timeout on success")
           $('#share-section .button-area').show('fade');
           $('#gif-post-dialog .message').removeClass("success").hide().text("");
-          $('#gif-post-dialog .gif-preview').remove()
           $('#gif-post-dialog').hide('blind');
           $('.share-gif-form').show();
         }, 5000);

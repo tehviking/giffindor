@@ -21,7 +21,11 @@
       <div class="share-gif-form">
         <div class="gif-input-container">
           {{textarea id="new-gif-body" name="new-gif-post" class="new-gif-input" placeholder="Gif link with your message here" value=gifPost.body}}
-          <div class="gif-preview-container"></div>
+          <div class="gif-preview-container">
+            {{#if gifPost.isGif}}
+              <div class="gif-preview"><img {{bind-attr src=gifPost.parsedUrl}} width="90"></div>
+            {{/if}}
+          </div>
           <div style="clear:both;"></div>
         </div>
         <div style="clear:both;"></div>
