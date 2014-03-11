@@ -188,7 +188,8 @@ describe 'new post component', ->
 
       describe "clicking cancel", ->
         beforeEach ->
-          @component.$("#gif-post-dialog a.cancel-post").click()
+          click @component.$("a.cancel-post")
+          @component.send("cancel")
         it "closes the dialog", ->
           expect(@component.$('#gif-post-dialog')).not.to.be.visible
         it "clears the text input", ->

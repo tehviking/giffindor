@@ -27,23 +27,12 @@ App.GfNewPostComponent = Ember.Component.extend({
   postUrl: "/gif_posts",
 
   initLegacyCode: function() {
-    var regex = gifRegex();
-    var ajax = ic.ajax;
-    var component = this;
-
-    $('#gif-post-dialog').on("click", 'a.cancel-post', function(e) {
-      e.preventDefault();
-      $('#share-section .button-area').show('fade');
-      $("#new-gif-body").val("");
-      $('#gif-post-dialog').hide();
-    });
-
     $('section.gif-list').on("click", "article a[data-gif-delete]", function(e) {
       e.preventDefault();
       var url = $(this).attr('href');
       var id = $(this).data('gifPostId');
       if(confirm('Are you sure you want to delete this post?')){
-        ajax({
+        ic.ajax({
           type: "DELETE",
           dataType: "json",
           url: url
@@ -52,7 +41,6 @@ App.GfNewPostComponent = Ember.Component.extend({
         });
       }
     });
-
   }.on("didInsertElement"),
 
   observeInputChanges: function(){
@@ -76,6 +64,11 @@ App.GfNewPostComponent = Ember.Component.extend({
       $('#share-section .button-area').hide('fade');
       $('#gif-post-dialog').show('blind');
       $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
+    },
+    cancel: function() {
+      $('#share-section .button-area').show('fade');
+      $("#new-gif-body").val("");
+      $('#gif-post-dialog').hide();
     },
     submit: function() {
       var currentUserId = $('meta[name="current-user-id"]').attr("content");
