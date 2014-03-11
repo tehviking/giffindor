@@ -1,9 +1,30 @@
+App.GifPost = Ember.Object.extend({
+  regex: gifRegex(),
+  body: "",
+  url: "",
+  parsedUrl: function() {
+    this.get("url").match(regex)[0] || "";
+  }.property("url"),
+  isGif: function() {
+    /.gif$/.test(this.get("parsedUrl"))
+  }.property("parsedUrl"),
+  charCount: function() {
+    if (this.get("isGif")) {
+      this.get("body.length") - this.get("parsedUrl.length")
+    } else {
+      this.get("body.length")
+    }
+  }.property("body", "parsedUrl", "length")
+});
+
 App.GfNewPostComponent = Ember.Component.extend({
   currentUser: null,
   layoutName: "components/gf-new-post",
+  gifPost: App.GifPost.create(),
 
   initLegacyCode: function() {
-    var ajax = ic.ajax
+    var regex = gifRegex();
+    var ajax = ic.ajax;
     $('#toggle-post-dialog').on("click", function(e) {
       e.preventDefault();
       $("#new-gif-body").val("");
@@ -20,7 +41,6 @@ App.GfNewPostComponent = Ember.Component.extend({
     });
 
     $('#new-gif-body').on("input propertychange", function(e) {
-      var regex = gifRegex();
       var parsedUrl = $(this).val().match(regex);
       var isGif = !!parsedUrl ? /.gif$/.test(parsedUrl) : null;
       var charCount
@@ -40,7 +60,6 @@ App.GfNewPostComponent = Ember.Component.extend({
         $('#gif-post-dialog .gif-preview').remove()
         $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
       }
-      $("#gif-post-dialog .character-count-number").text(charCount);
     });
 
     $('section.gif-list').on("click", "article a[data-gif-delete]", function(e) {
@@ -83,7 +102,6 @@ App.GfNewPostComponent = Ember.Component.extend({
         var body = post.body || null;
         $('#gif-post-dialog .message').removeClass("error").text("");
         $('.share-gif-form').hide('fade');
-        $("#gif-post-dialog .character-count-number").text("0");
         $('#gif-post-dialog .message').show().addClass("success").text("New gif posted: " + post.url);
         var newArticle = '<article class="gif-entry" data-gif-entry data-gif-post-id="' + post.id + '"><div class="gif-entry-image"><img class="framed" src="' + url + '"></div><div class="gif-entry-body">' + body + '</div><div class="gif-entry-delete"><a class="btn btn-danger"data-gif-delete data-gif-post-id="' + post.id + '" href="/gif_posts/' + post.id + '" rel="nofollow">Delete</a></div><div class="gif-entry-user">Shared by ' + username + '</div><div class="gif-entry-permalink"><a href="/gif_posts/' + post.id + '">Permalink</a></div><div style="clear:both;"></div></article>';
         $('section.gif-list').prepend(newArticle);

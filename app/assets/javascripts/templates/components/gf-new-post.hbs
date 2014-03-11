@@ -20,7 +20,7 @@
       <div class="message"></div>
       <div class="share-gif-form">
         <div class="gif-input-container">
-          <textarea id="new-gif-body" name="new-gif-post" placeholder="Gif link with your message here"></textarea>
+          {{textarea id="new-gif-body" name="new-gif-post" class="new-gif-input" placeholder="Gif link with your message here" valueBinding="gifPost.body"}}
           <div class="gif-preview-container"></div>
           <div style="clear:both;"></div>
         </div>
