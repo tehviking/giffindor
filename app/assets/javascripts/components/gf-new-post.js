@@ -30,13 +30,6 @@ App.GfNewPostComponent = Ember.Component.extend({
     var regex = gifRegex();
     var ajax = ic.ajax;
     var component = this;
-    $('#toggle-post-dialog').on("click", function(e) {
-      e.preventDefault();
-      $("#new-gif-body").val("");
-      $('#share-section .button-area').hide('fade');
-      $('#gif-post-dialog').show('blind');
-      $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
-    });
 
     $('#gif-post-dialog').on("click", 'a.cancel-post', function(e) {
       e.preventDefault();
@@ -78,19 +71,22 @@ App.GfNewPostComponent = Ember.Component.extend({
   }.observes("gifPost.body", "gifPost.isValid"),
 
   actions: {
+    showDialog: function() {
+      $("#new-gif-body").val("");
+      $('#share-section .button-area').hide('fade');
+      $('#gif-post-dialog').show('blind');
+      $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
+    },
     submit: function() {
       var currentUserId = $('meta[name="current-user-id"]').attr("content");
       $(this).attr("disabled", "disabled");
-      var body = $("#new-gif-body").val();
-      var regex = gifRegex();
-      var parsedUrl = body.match(regex);
       ic.ajax({
         type: "POST",
         dataType: "json",
         url: this.get("postUrl"),
         data: {
           gif_post: {
-            body: body,
+            body: this.get("postUrl.body"),
             url: this.get("gifPost.parsedUrl"),
           }
         }
@@ -138,4 +134,4 @@ $(document).ready(function() {
 
 function gifRegex() {
   return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
-};
+                                                                         };

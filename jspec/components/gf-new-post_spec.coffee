@@ -45,7 +45,8 @@ describe 'new post component', ->
 
   describe "clicking the show dialog button", ->
     beforeEach ->
-      @component.$("#toggle-post-dialog").click()
+      click "#toggle-post-dialog"
+      @component.send "showDialog"
     it "shows the dialog", ->
       expect(@component.$('#gif-post-dialog')).to.be.visible
 
