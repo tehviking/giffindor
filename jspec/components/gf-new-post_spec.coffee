@@ -1,8 +1,34 @@
+describe "GifPost", ->
+  beforeEach ->
+    @gifPost = App.GifPost.create()
+  describe "with a valid url", ->
+    beforeEach ->
+      @gifPost.set("body", "thing: http://blah.com/cool-gif.gif")
+    it "parses the url from the body", ->
+      expect(@gifPost.get("parsedUrl")).to.equal "http://blah.com/cool-gif.gif"
+    it "sets isGif to true", ->
+      expect(@gifPost.get("isGif")).to.be.true
+    it "returns a char count minus the gif url", ->
+      expect(@gifPost.get("charCount")).to.equal 7
+    it "is valid", ->
+      expect(@gifPost.get("isValid")).to.be.true
+  describe "with a non-gif url", ->
+    beforeEach ->
+      @gifPost.set("body", "thing: http://blah.com/cool-gif.jpg")
+    it "parses the url from the body", ->
+      expect(@gifPost.get("parsedUrl")).to.equal "http://blah.com/cool-gif.jpg"
+    it "sets isGif to true", ->
+      expect(@gifPost.get("isGif")).to.be.false
+    it "returns a char count minus the gif url", ->
+      expect(@gifPost.get("charCount")).to.equal 35
+    it "is not valid", ->
+      expect(@gifPost.get("isValid")).to.be.false
+
 describe 'new post component', ->
   beforeEach ->
     @gifList = $('<section class="gif-list"></section>').appendTo("body");
-    @component = App.GfNewPostComponent.create().append()
-    @component.container = App.__container__
+    @component = App.__container__.lookup("component:gfNewPost").appendTo("body")
+    @component.set "gifPost", App.GifPost.create()
   afterEach ->
     @gifList.remove()
     @component.destroy()
@@ -20,8 +46,12 @@ describe 'new post component', ->
 
     describe 'entering bad text into the gif box', ->
       beforeEach ->
-        @component.$("textarea").val("thing: notagif.jpg")
-        @component.$("textarea").trigger "input"
+        # THIS IS AWFUL. This input is not binding back to the component model.
+        fillIn @component.$("textarea#new-gif-body"), "thing: notagif.jpg"
+        @component.get("gifPost").set("body", "thing: notagif.jpg")
+        @component.$("textarea#new-gif-body").trigger("input")
+      it "binds to the model", ->
+        expect(@component.get("gifPost.body")).to.equal "thing: notagif.jpg"
       it "leaves the save button disabled", ->
         expect(@component.$("a.gif-submit")).to.have.attr("disabled")
       it "counts the characters", ->
@@ -35,10 +65,9 @@ describe 'new post component', ->
 
       describe 'putting too much text in the box', ->
         beforeEach ->
-            @component.$("textarea").val("thing: http://blah.com/cool-gif.gif")
-            @component.$("textarea").trigger "input"
-            @component.$("textarea").val("thing: http://blah.com/cool-gif.gif This is a thing which is pretty cool except the text is too long. Maybe this is going to display a nice error message for people to enjoy")
-            @component.$("textarea").trigger "input"
+          fillIn @component.$("textarea#new-gif-body"), "thing: http://blah.com/cool-gif.gif This is a thing which is pretty cool except the text is too long. Maybe this is going to display a nice error message for people to enjoy"
+          @component.get("gifPost").set("body", "thing: http://blah.com/cool-gif.gif This is a thing which is pretty cool except the text is too long. Maybe this is going to display a nice error message for people to enjoy")
+          @component.$("textarea#new-gif-body").trigger("input")
         it "disables the save button", ->
           expect(@component.$("a.gif-submit")).to.have.attr("disabled")
         it "counts the characters", ->
@@ -52,8 +81,9 @@ describe 'new post component', ->
 
         describe 'entering good text into the gif box', ->
           beforeEach ->
-            @component.$("textarea").val("thing: http://blah.com/cool-gif.gif")
-            @component.$("textarea").trigger "input"
+            fillIn @component.$("textarea#new-gif-body"), "thing: http://blah.com/cool-gif.gif"
+            @component.$("textarea#new-gif-body").trigger("input")
+            @component.get("gifPost").set("body", "thing: http://blah.com/cool-gif.gif")
           it "enables the save button", ->
             expect(@component.$("a.gif-submit")).not.to.have.attr("disabled")
           it "counts characters, minus the gif input", ->

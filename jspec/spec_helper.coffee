@@ -14,3 +14,6 @@ this.beforeEach = (fn)->
 afterEachWithoutEmberRun = this.afterEach
 this.afterEach = (fn)->
   afterEachWithoutEmberRun -> Ember.run => fn.call(this)
+
+beforeEach ->
+  App.reset()

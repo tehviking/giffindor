@@ -1,30 +1,34 @@
 App.GifPost = Ember.Object.extend({
   regex: gifRegex(),
   body: "",
-  url: "",
   parsedUrl: function() {
-    this.get("url").match(regex)[0] || "";
-  }.property("url"),
+    var matches = this.get("body").match(this.get("regex"))
+    return (matches && matches.length > 0) ? matches[0] : "";
+  }.property("body"),
   isGif: function() {
-    /.gif$/.test(this.get("parsedUrl"))
+    return /.gif$/.test(this.get("parsedUrl"))
   }.property("parsedUrl"),
   charCount: function() {
     if (this.get("isGif")) {
-      this.get("body.length") - this.get("parsedUrl.length")
+      return this.get("body.length") - this.get("parsedUrl.length")
     } else {
-      this.get("body.length")
+      return this.get("body.length")
     }
-  }.property("body", "parsedUrl", "length")
+  }.property("body", "parsedUrl", "isGif"),
+  isValid: function() {
+    return !!(this.get("charCount") <= 140 && this.get("isGif"))
+  }.property("charCount", "isGif")
 });
 
 App.GfNewPostComponent = Ember.Component.extend({
   currentUser: null,
   layoutName: "components/gf-new-post",
-  gifPost: App.GifPost.create(),
+  gifPost: null,
 
   initLegacyCode: function() {
     var regex = gifRegex();
     var ajax = ic.ajax;
+    var component = this;
     $('#toggle-post-dialog').on("click", function(e) {
       e.preventDefault();
       $("#new-gif-body").val("");
@@ -41,21 +45,16 @@ App.GfNewPostComponent = Ember.Component.extend({
     });
 
     $('#new-gif-body').on("input propertychange", function(e) {
-      var parsedUrl = $(this).val().match(regex);
-      var isGif = !!parsedUrl ? /.gif$/.test(parsedUrl) : null;
-      var charCount
-      if (!!isGif) {
-        charCount = ($(this).val().length - parsedUrl[0].length)
-        if (charCount <= 140) {
+      if (!!component.get("gifPost.isGif")) {
+        $('#gif-post-dialog .gif-preview-container').html('<div class="gif-preview"><img src="' + component.get("gifPost.parsedUrl") + '" width="90"></div>')
+        if (component.get("isValid")) {
           $("#gif-post-dialog a.gif-submit").removeAttr("disabled");
           $('#gif-post-dialog .message').text("").removeClass("error").removeClass("validation-error").hide();
-          $('#gif-post-dialog .gif-preview-container').html('<div class="gif-preview"><img src="' + parsedUrl[0] + '" width="90"></div>')
         } else {
           $('#gif-post-dialog .message').show().addClass("validation-error").text("Your message is too long.");
           $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
         }
       } else {
-        charCount = $(this).val().length
         $('#gif-post-dialog .message').show().addClass("validation-error").text("There is no valid gif link in this post.")
         $('#gif-post-dialog .gif-preview').remove()
         $("#gif-post-dialog a.gif-submit").attr("disabled", "disabled");
@@ -130,7 +129,9 @@ App.GfNewPostComponent = Ember.Component.extend({
 
 $(document).ready(function() {
   $("#new-post-container").each(function(){
-    var component = App.GfNewPostComponent.create();
+    var component = App.GfNewPostComponent.create({
+      gifPost: App.GifPost.create()
+    });
     component.replaceIn(this);
   });
 });
