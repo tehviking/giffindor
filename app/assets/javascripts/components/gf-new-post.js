@@ -47,7 +47,7 @@ App.GfNewPostComponent = Ember.Component.extend({
   classNames: ["new-post-component"],
   classNameBindings: ["formState", "isInvalid"],
   formState: "initial",
-  // FORM-STATES: "initial", "open", "editing", "loading", "failure", "success"
+  // FORM-STATES: "initial", "editing", "loading", "failure", "success"
   isValid: Ember.computed.alias("gifPost.isValid"),
   isInvalid: Ember.computed.not("isValid"),
   message: "",
@@ -73,12 +73,12 @@ App.GfNewPostComponent = Ember.Component.extend({
   observeInputChanges: function(){
     if (this.get("gifPost.isGif")) {
       if (this.get("gifPost.isValid")) {
-        $('#gif-post-dialog .message').text("").removeClass("error").removeClass("validation-error").hide();
+        $('#gif-post-dialog .message').text("");
       } else {
-        $('#gif-post-dialog .message').show().addClass("validation-error").text("Your message is too long.");
+        $('#gif-post-dialog .message').text("Your message is too long.");
       }
     } else {
-      $('#gif-post-dialog .message').show().addClass("validation-error").text("There is no valid gif link in this post.")
+      $('#gif-post-dialog .message').text("There is no valid gif link in this post.")
     }
   }.observes("gifPost.body", "gifPost.isValid"),
 
@@ -101,25 +101,25 @@ App.GfNewPostComponent = Ember.Component.extend({
         controller.set("formState", "success");
         gifPost.set("username", data.gif_post.user.username)
         gifPost.set("id", data.gif_post.id)
-        $('#gif-post-dialog .message').removeClass("error").text("");
-        $('.share-gif-form').hide('fade');
-        $('#gif-post-dialog .message').show().addClass("success").text("New gif posted: " + gifPost.get("parsedUrl"));
+        $('#gif-post-dialog .message').text("");
+        $('#gif-post-dialog .message').text("New gif posted: " + gifPost.get("parsedUrl"));
         var newArticle = '<article class="gif-entry" data-gif-entry data-gif-post-id="' + gifPost.get("id") + '"><div class="gif-entry-image"><img class="framed" src="' + gifPost.get("parsedUrl") + '"></div><div class="gif-entry-body">' + gifPost.get("body") + '</div><div class="gif-entry-delete"><a class="btn btn-danger"data-gif-delete data-gif-post-id="' + gifPost.get("id") + '" href="/gif_posts/' + gifPost.get("id") + '" rel="nofollow">Delete</a></div><div class="gif-entry-user">Shared by ' + gifPost.get("username") + '</div><div class="gif-entry-permalink"><a href="/gif_posts/' + gifPost.get("id") + '">Permalink</a></div><div style="clear:both;"></div></article>';
         $('section.gif-list').prepend(newArticle);
         setTimeout(function() {
           controller.set("formState", "initial")
-          $('#gif-post-dialog .message').removeClass("success").hide().text("");
+          $('#gif-post-dialog .message').text("");
         }, 5000);
       // Failure
       }, function(data) {
-        $('#gif-post-dialog .message').removeClass("success").text("");
+        controller.set("formState", "failure");
         if (!data.jqXHR || !data.jqXHR.responseJSON) {
-          $('#gif-post-dialog .message').show().addClass("error").text("There was an error posting your gif. Please wait and try again.");
+          $('#gif-post-dialog .message').text("There was an error posting your gif. Please wait and try again.");
         } else {
-          $('#gif-post-dialog .message').show().addClass("error").text(data.jqXHR.responseJSON.errors.url[0]);
+          $('#gif-post-dialog .message').text(data.jqXHR.responseJSON.errors.url[0]);
         }
         setTimeout(function() {
-          $('#gif-post-dialog .message').removeClass("error").text("").hide();
+          $('#gif-post-dialog .message').text("");
+          controller.set("formState", "initial")
         }, 5000);
       });
     }

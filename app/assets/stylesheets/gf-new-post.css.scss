@@ -1,4 +1,14 @@
-//@import 'bootstrap/buttons';
+// Styles for gf-new-post component
+@mixin error-message {
+  display: block;
+  color: white;
+  background-color: red;
+}
+@mixin success-message {
+  display: block;
+  color: white;
+  background-color: green;
+}
 
 .new-post-component {
   .button-area {
@@ -8,7 +18,7 @@
     .button-area {
       display: block;
     }
-    .share-dialog {
+    .share-dialog-container {
       display: none;
     }
     .gif-submit {
@@ -23,12 +33,24 @@
     }
   }
   &.failure {
+    .message {
+      @include error-message;
+    }
   }
   &.success {
+    .share-gif-form {
+      display: none;
+    }
+    .message {
+      @include success-message;
+    }
   }
   &.is-invalid {
     .gif-submit {
       @extend .disabled;
+    }
+    .message {
+      @include error-message;
     }
   }
 }

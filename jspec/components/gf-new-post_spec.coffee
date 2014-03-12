@@ -41,7 +41,9 @@ describe 'new post component', ->
     expect(@component.get('element')).to.exist
     expect(@component.$('#gif-post-dialog')).to.exist
   it "doesn't show the dialog", ->
-    expect(@component.$('#gif-post-dialog')).not.to.be.visible
+    expect(@component.get("formState")).to.equal "initial"
+    # TODO: Enable after CSS is included in test
+    # expect(@component.$('.share-dialog-container'))
 
   describe "clicking the show dialog button", ->
     beforeEach ->
@@ -52,6 +54,7 @@ describe 'new post component', ->
 
     describe 'entering bad text into the gif box', ->
       beforeEach ->
+        # FIXME: EMBER PROBLEMS
         # THIS IS AWFUL. This input is not binding back to the component model.
         fillIn @component.$("textarea#new-gif-body"), "thing: notagif.jpg"
         @component.get("gifPost").set("body", "thing: notagif.jpg")
@@ -59,12 +62,14 @@ describe 'new post component', ->
       it "binds to the model", ->
         expect(@component.get("gifPost.body")).to.equal "thing: notagif.jpg"
       it "leaves the save button disabled", ->
-        expect(@component.$("a.gif-submit")).to.have.attr("disabled")
+        expect(@component.$()).to.have.class "is-invalid"
+        # TODO: Enable after CSS is included in test
+        # expect(@component.$("a.gif-submit")).to.have.attr("cursor", "not-allowed")
       it "counts the characters", ->
         expect(@component.$(".character-count-number").text()).to.equal "18"
       it "displays a client-side validation error", ->
         expect(@component.$(".message")).to.be.visible
-        expect(@component.$(".message")).to.have.class("validation-error")
+        expect(@component.$()).to.have.class("is-invalid")
         expect(@component.$(".message").text()).to.match /no valid gif/
       it "does not display a preview section", ->
         expect(@component.$(".gif-preview")).not.to.exist
@@ -75,12 +80,13 @@ describe 'new post component', ->
           @component.get("gifPost").set("body", "thing: http://blah.com/cool-gif.gif This is a thing which is pretty cool except the text is too long. Maybe this is going to display a nice error message for people to enjoy")
           @component.$("textarea#new-gif-body").trigger("input")
         it "disables the save button", ->
-          expect(@component.$("a.gif-submit")).to.have.attr("disabled")
+          expect(@component.$()).to.have.class "is-invalid"
+          # TODO: Enable after CSS is included in test
+          # expect(@component.$("a.gif-submit")).to.have.attr("cursor", "not-allowed")
         it "counts the characters", ->
           expect(@component.$(".character-count-number").text()).to.equal "145"
         it "displays a client-side validation error", ->
           expect(@component.$(".message")).to.be.visible
-          expect(@component.$(".message")).to.have.class("validation-error")
           expect(@component.$(".message").text()).to.match /too long/
         it "continues to display a preview section", ->
           #expect(@component.$(".gif-preview")).to.exist
@@ -95,8 +101,9 @@ describe 'new post component', ->
           it "counts characters, minus the gif input", ->
             expect(@component.$(".character-count-number").text()).to.equal "7"
           it "does not display an error message", ->
-            expect(@component.$(".message")).not.to.be.visible
-            expect(@component.$(".message")).not.to.have.class("validation-error")
+            expect(@component.$()).not.to.have.class "is-invalid"
+            # TODO: Enable after CSS is included in test
+            #expect(@component.$(".message")).not.to.be.visible
             expect(@component.$(".message").text()).to.be.empty
           it "displays a preview image", ->
             expect(@component.$(".gif-preview")).to.exist
@@ -119,7 +126,7 @@ describe 'new post component', ->
 
             it "shows success message and adds gif", ->
               expect(@component.$("#gif-post-dialog .message")).to.be.visible
-              expect(@component.$("#gif-post-dialog .message")).to.have.class "success"
+              expect(@component.$()).to.have.class "success"
               expect(@component.$("#gif-post-dialog .message").text()).to.equal "New gif posted: http://blah.com/cool-gif.gif"
               newGif = $("section.gif-list article.gif-entry")
               expect($(newGif[0]).find(".gif-entry-user").text()).to.equal "Shared by fakeuser"
@@ -161,8 +168,8 @@ describe 'new post component', ->
               # WTF EMBER. BIND YO SHIT.
               @component.send "submit"
             it "shows an error message", ->
-              expect(@component.$("#gif-post-dialog .message")).not.to.have.class "success"
-              expect(@component.$("#gif-post-dialog .message")).to.have.class "error"
+              expect(@component.$()).not.to.have.class "success"
+              expect(@component.$()).to.have.class "failure"
               expect(@component.$("#gif-post-dialog .message").text()).to.equal "LOL NOPE VALIDATION FAILZ"
           #   describe "after 5 seconds", ->
           #     beforeEach ->
@@ -182,8 +189,8 @@ describe 'new post component', ->
               # WTF EMBER. BIND YO SHIT.
               @component.send "submit"
             it "shows an error message", ->
-              expect(@component.$("#gif-post-dialog .message")).not.to.have.class "success"
-              expect(@component.$("#gif-post-dialog .message")).to.have.class "error"
+              expect(@component.$()).not.to.have.class "success"
+              expect(@component.$()).to.have.class "failure"
               expect(@component.$("#gif-post-dialog .message").text()).to.match /error posting/
 
       describe "clicking cancel", ->
@@ -191,6 +198,8 @@ describe 'new post component', ->
           click @component.$("a.cancel-post")
           @component.send("cancel")
         it "closes the dialog", ->
-          expect(@component.$('#gif-post-dialog')).not.to.be.visible
+          expect(@component.$()).to.have.class "initial"
+          # TODO: Enable after CSS is included in test
+          # expect(@component.$('#gif-post-dialog')).not.to.be.visible
         it "clears the text input", ->
           expect(@component.$('textarea').val()).to.equal ""
