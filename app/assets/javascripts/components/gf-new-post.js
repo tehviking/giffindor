@@ -1,13 +1,15 @@
-App.GifPost = Ember.Object.extend({
+App.GifPost = DS.Model.extend({
   /* PROPERTIES */
   regex: gifRegex(),
-  body: "",
-  urlRoot: "/gif_posts",
-  username: "",
+  body: DS.attr("string"),
+  url: DS.attr("string"),
+  username: DS.attr("string"),
 
   parsedUrl: function() {
-    var matches = this.get("body").match(this.get("regex"))
-    return (matches && matches.length > 0) ? matches[0] : "";
+    if (!!this.get("body")) {
+      var matches = this.get("body").match(this.get("regex"))
+      return (matches && matches.length > 0) ? matches[0] : "";
+    }
   }.property("body"),
   isGif: function() {
     return /.gif$/.test(this.get("parsedUrl"))
@@ -23,20 +25,11 @@ App.GifPost = Ember.Object.extend({
     return !!(this.get("charCount") <= 140 && this.get("isGif"))
   }.property("charCount", "isGif"),
 
-  /* FUNCTIONS */
-  save: function() {
-    return ic.ajax({
-      type: "POST",
-      dataType: "json",
-      url: this.get("urlRoot"),
-      data: {
-        gif_post: {
-          body: this.get("body"),
-          url: this.get("parsedUrl")
-        }
-      }
-    })
-  }
+  /* OBSERVERS */
+  setUrl: function() {
+    this.set("url", this.get("parsedUrl"));
+  }.observes("parsedUrl")
+
 });
 
 App.GfNewPostComponent = Ember.Component.extend({
@@ -91,7 +84,7 @@ App.GfNewPostComponent = Ember.Component.extend({
     },
     cancel: function() {
       this.set("formState", "initial");
-      this.set("gifPost", App.GifPost.create());
+      this.set("gifPost", App.store.createRecord("gifPost"));
     },
     submit: function() {
       controller = this;
@@ -100,27 +93,26 @@ App.GfNewPostComponent = Ember.Component.extend({
       gifPost.save().then(function(data) {
         // Success
         controller.set("formState", "success");
-        gifPost.set("username", data.gif_post.user.username)
-        gifPost.set("id", data.gif_post.id)
         controller.set("message", "New gif posted: " + gifPost.get("parsedUrl"));
 
         var newArticle = '<article class="gif-entry" data-gif-entry data-gif-post-id="' + gifPost.get("id") + '"><div class="gif-entry-image"><img class="framed" src="' + gifPost.get("parsedUrl") + '"></div><div class="gif-entry-body">' + gifPost.get("body") + '</div><div class="gif-entry-delete"><a class="btn btn-danger"data-gif-delete data-gif-post-id="' + gifPost.get("id") + '" href="/gif_posts/' + gifPost.get("id") + '" rel="nofollow">Delete</a></div><div class="gif-entry-user">Shared by ' + gifPost.get("username") + '</div><div class="gif-entry-permalink"><a href="/gif_posts/' + gifPost.get("id") + '">Permalink</a></div><div style="clear:both;"></div></article>';
         $('section.gif-list').prepend(newArticle);
         setTimeout(function() {
-          controller.set("formState", "initial")
           controller.set("message", "");
+          controller.set("formState", "initial")
         }, 5000);
       // Failure
       }, function(data) {
         controller.set("formState", "failure");
-        if (!data.jqXHR || !data.jqXHR.responseJSON) {
-          controller.set("message", "There was an error posting your gif. Please wait and try again.")
-        } else {
+        if (!!data.jqXHR && data.jqXHR.status == 422) {
+          //422: validation error
           controller.set("message", data.jqXHR.responseJSON.errors.url[0]);
+        } else {
+          controller.set("message", "There was an error posting your gif. Please wait and try again.")
         }
         setTimeout(function() {
           controller.set("message", "");
-          controller.set("formState", "initial")
+          controller.set("formState", "editing")
         }, 5000);
       });
     }
@@ -131,7 +123,7 @@ App.GfNewPostComponent = Ember.Component.extend({
 $(document).ready(function() {
   $("#new-post-container").each(function(){
     var component = App.GfNewPostComponent.create({
-      gifPost: App.GifPost.create()
+      gifPost: App.store.createRecord("gifPost")
     });
     component.replaceIn(this);
   });

@@ -1,7 +1,7 @@
 ## UNIT TESTS
 describe "GifPost", ->
   beforeEach ->
-    @gifPost = App.GifPost.create()
+    @gifPost = App.store.createRecord("gifPost")
     @clock = sinon.useFakeTimers()
   afterEach ->
     @clock.restore()
@@ -33,7 +33,7 @@ describe 'new post component', ->
   beforeEach ->
     @gifList = $('<section class="gif-list"></section>').appendTo("body");
     @component = App.__container__.lookup("component:gfNewPost").appendTo("body")
-    @component.set "gifPost", App.GifPost.create()
+    @component.set "gifPost", App.store.createRecord("gifPost")
   afterEach ->
     @gifList.remove()
     @component.destroy()
@@ -115,8 +115,7 @@ describe 'new post component', ->
                   gif_post:
                     id: "1"
                     url: "http://blah.com/cool-gif.gif"
-                    user:
-                      username: "fakeuser"
+                    username: "fakeuser"
                     body: "thing: http://blah.com/cool-gif.gif"
                 jqXHR: {}
                 textStatus: 'success'
@@ -134,8 +133,7 @@ describe 'new post component', ->
             #   beforeEach ->
             #     @clock.tick(6000)
             #   it "resets to initial state", ->
-            #     expect(@component.$("#gif-post-dialog .message")).not.to.be.visible
-            #     expect(@component.$("#gif-post-dialog .message")).not.to.have.class "success"
+            #     expect(@component.$()).to.have.class "initial"
             #     expect(@component.$("#gif-post-dialog .message").text()).to.equal ""
 
               describe "deleting the gif with success response", ->
@@ -162,7 +160,7 @@ describe 'new post component', ->
                   responseJSON:
                     errors:
                       url: ["LOL NOPE VALIDATION FAILZ"]
-
+                  status: 422
                 textStatus: 'unprocessable entity'
               click "a.gif-submit"
               # WTF EMBER. BIND YO SHIT.
@@ -173,12 +171,11 @@ describe 'new post component', ->
               expect(@component.$("#gif-post-dialog .message").text()).to.equal "LOL NOPE VALIDATION FAILZ"
           #   describe "after 5 seconds", ->
           #     beforeEach ->
-          #       @clock.tick(5010)
+          #       @clock.tick(6000)
           #     afterEach ->
           #       @clock.restore()
-          #     it "resets to initial state", ->
-          #       expect(@component.$("#gif-post-dialog .message")).not.to.be.visible
-          #       expect(@component.$("#gif-post-dialog .message")).not.to.have.class "error"
+          #     it "resets to editing state", ->
+          #       expect(@component.$()).to.have.class "editing"
           #       expect(@component.$("#gif-post-dialog .message").text()).to.equal ""
 
           describe "clicking submit with bad response", ->
