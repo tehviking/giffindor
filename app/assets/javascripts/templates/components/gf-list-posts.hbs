@@ -1,0 +1,24 @@
+{{#each gifPost in persistedGifPosts}}
+  <article class="gif-entry" data-gif-entry >
+    <div class="gif-entry-image">
+      <img class="framed" {{bind-attr src=gifPost.parsedUrl}}>
+    </div>
+    <div class="gif-entry-body">
+      {{gifPost.body}}
+    </div>
+    <div class="gif-entry-delete">
+      <a class="btn btn-danger" data-gif-delete {{action "delete" gifPost}}  rel="nofollow">
+        Delete
+      </a>
+    </div>
+    <div class="gif-entry-user">
+      Shared by {{gifPost.username}}
+    </div>
+    <div class="gif-entry-permalink">
+      <a {{bind-attr href=gifPost.permalink}}>
+        Permalink
+      </a>
+    </div>
+    <div style="clear:both;"></div>
+  </article>
+{{/each}}

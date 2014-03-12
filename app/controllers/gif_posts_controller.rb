@@ -5,7 +5,8 @@ class GifPostsController < ApplicationController
   respond_to :json, :html
   # GET /gif_posts
   def index
-    @gif_posts = GifPost.order("created_at DESC").all
+    @gif_posts = GifPost.order("created_at DESC")
+    respond_with @gif_posts
   end
 
   # GET /gif_posts/1
@@ -40,7 +41,7 @@ class GifPostsController < ApplicationController
     @gif_post.destroy
     respond_to do |format|
       format.html {redirect_to gif_posts_url}
-      format.json {render json: {message: "Post Deleted!"}, status: :ok}
+      format.json {render json: {}, status: :ok}
     end
   end
 

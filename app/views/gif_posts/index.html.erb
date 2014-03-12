@@ -12,19 +12,8 @@
 
 <div class="row">
   <div class="col-md-8 col-sm-8 col-md-offset-2">
-    <section class="gif-list">
-      <% @gif_posts.each do |gif_post| %>
-      <article class="gif-entry" data-gif-entry data-gif-post-id="<%= gif_post.id %>">
-        <div class="gif-entry-image"><%= image_tag(gif_post.url, class: "framed") %></div>
-        <p class="gif-entry-body"><%= gif_post.body %></p>
-        <div class="gif-entry-delete">
-          <a href="<%= gif_post_path(gif_post) %>" data-gif-delete data-gif-post-id="<%= gif_post.id %>" class="btn btn-danger" rel="nofollow">Delete</a>
-        </div>
-        <p class="gif-entry-user">Shared by <%= gif_post.user.username %></p>
-        <p class="gif-entry-permalink"><%= link_to 'Permalink', gif_post %></p>
-        <div style="clear:both;"></div>
-      </article>
-      <% end %>
+    <section id="gif-posts-container" class="gif-list">
+      Loading...
     </section>
   </div>
 </div>

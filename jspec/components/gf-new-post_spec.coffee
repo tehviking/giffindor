@@ -1,41 +1,8 @@
-## UNIT TESTS
-describe "GifPost", ->
-  beforeEach ->
-    @gifPost = App.store.createRecord("gifPost")
-    @clock = sinon.useFakeTimers()
-  afterEach ->
-    @clock.restore()
-  describe "with a valid url", ->
-    beforeEach ->
-      @gifPost.set("body", "thing: http://blah.com/cool-gif.gif")
-    it "parses the url from the body", ->
-      expect(@gifPost.get("parsedUrl")).to.equal "http://blah.com/cool-gif.gif"
-    it "sets isGif to true", ->
-      expect(@gifPost.get("isGif")).to.be.true
-    it "returns a char count minus the gif url", ->
-      expect(@gifPost.get("charCount")).to.equal 7
-    it "is valid", ->
-      expect(@gifPost.get("isValid")).to.be.true
-  describe "with a non-gif url", ->
-    beforeEach ->
-      @gifPost.set("body", "thing: http://blah.com/cool-gif.jpg")
-    it "parses the url from the body", ->
-      expect(@gifPost.get("parsedUrl")).to.equal "http://blah.com/cool-gif.jpg"
-    it "sets isGif to true", ->
-      expect(@gifPost.get("isGif")).to.be.false
-    it "returns a char count minus the gif url", ->
-      expect(@gifPost.get("charCount")).to.equal 35
-    it "is not valid", ->
-      expect(@gifPost.get("isValid")).to.be.false
-
-## INTEGRATION TESTS
 describe 'new post component', ->
   beforeEach ->
-    @gifList = $('<section class="gif-list"></section>').appendTo("body");
     @component = App.__container__.lookup("component:gfNewPost").appendTo("body")
     @component.set "gifPost", App.store.createRecord("gifPost")
   afterEach ->
-    @gifList.remove()
     @component.destroy()
   it "exists", ->
     expect(@component.get('element')).to.exist
@@ -110,6 +77,7 @@ describe 'new post component', ->
             expect(@component.$(".gif-preview img").attr("src")).to.equal "http://blah.com/cool-gif.gif"
           describe "clicking submit with good response", ->
             beforeEach ->
+              @listComponent = App.__container__.lookup("component:gfListPosts").appendTo("body")
               ic.ajax.defineFixture '/gif_posts',
                 response:
                   gif_post:
@@ -122,35 +90,19 @@ describe 'new post component', ->
               click "a.gif-submit"
               # WTF EMBER. BIND YO SHIT.
               @component.send "submit"
+            afterEach ->
+              @listComponent.destroy()
 
-            it "shows success message and adds gif", ->
+            it "shows success message", ->
               expect(@component.$("#gif-post-dialog .message")).to.be.visible
               expect(@component.$()).to.have.class "success"
               expect(@component.$("#gif-post-dialog .message").text()).to.equal "New gif posted: http://blah.com/cool-gif.gif"
-              newGif = $("section.gif-list article.gif-entry")
-              expect($(newGif[0]).find(".gif-entry-user").text()).to.equal "Shared by fakeuser"
             # describe "after 5 seconds", ->
             #   beforeEach ->
             #     @clock.tick(6000)
             #   it "resets to initial state", ->
             #     expect(@component.$()).to.have.class "initial"
             #     expect(@component.$("#gif-post-dialog .message").text()).to.equal ""
-
-              describe "deleting the gif with success response", ->
-                beforeEach ->
-                  ic.ajax.defineFixture '/gif_posts/1',
-                    response: "yay"
-                    jqXHR: {}
-                    textStatus: 'success'
-                  sinon.stub(window, "confirm").returns(true)
-                  @newGif = $("section.gif-list article.gif-entry")
-                  @deleteButton = $(@newGif).find(".gif-entry-delete [data-gif-delete]")
-                  $(@deleteButton).trigger("click")
-
-                afterEach ->
-                  window.confirm.restore()
-                it "removes the gif", ->
-                  expect($("section.gif-list article.gif-entry")).not.to.exist
 
           describe "clicking submit with validation error", ->
             beforeEach ->
@@ -200,3 +152,32 @@ describe 'new post component', ->
           # expect(@component.$('#gif-post-dialog')).not.to.be.visible
         it "clears the text input", ->
           expect(@component.$('textarea').val()).to.equal ""
+
+describe "list posts component", ->
+  beforeEach ->
+    ic.ajax.defineFixture '/gif_posts',
+      response: {"gif_posts":[{"id":69,"url":"http://fake.com/cool.gif","body":"Play ball http://fake.com/cool.gif","username":"tehviking"}]}
+      jqXHR: {}
+      textStatus: 'success'
+    @component = App.__container__.lookup("component:gfListPosts").appendTo("body")
+    App.store.find("gifPost").then (result) =>
+      @component.set "gifPosts", result
+      @gifPost = result.get("firstObject")
+  afterEach ->
+    @component.destroy()
+  it "exists", ->
+    expect(@component.get('element')).to.exist
+
+  it "lists the gifs", ->
+    expect(@component.$("article.gif-entry:first .gif-entry-user").text().trim()).to.equal "Shared by tehviking"
+  describe "deleting a gif", ->
+    beforeEach ->
+      sinon.stub(window, "confirm").returns(true)
+      @domGif = $("article.gif-entry:first")
+      @deleteButton = $(@domGif).find(".gif-entry-delete [data-gif-delete]")
+      #$(@deleteButton).trigger("click")
+      @component.send("delete", @gifPost)
+    afterEach ->
+      window.confirm.restore()
+    it "removes the gif", ->
+      expect($("article.gif-entry")).not.to.exist
