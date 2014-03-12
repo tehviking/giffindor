@@ -42,47 +42,8 @@ img.framed {
   background-color: #ffe; 
 }
 
-#share-section {
-  float: right;
-  .button-area {
-    margin-bottom: 20px;
-  }
-}
-.row.headline {
-  margin-top: 10px;
-}
-.share-dialog {
-  background-color: white;
-  border-radius: 6px;
-  padding: 16px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  .title {
-    margin: 0;
-    margin-bottom: 10px;
-  }
-  .character-count {
-    font-size: 30px;
-    font-weight: bold;
-    margin: 0;
-    float: right;
-  }
-  textarea {
-    border-radius: 6px;
-    width: 70%;
-    float: left;
-  }
-  .gif-preview-container {
-    width: 25%;
-    float:right;
-  }
-  .gif-input-container {
-    margin-bottom: 10px;
-    clear: both;
-  }
-  .gif-input-actions {
-    float: left;
-  }
+h1.no-top-margin {
+  margin-top: 0px;
 }
 
 section.gif-list {

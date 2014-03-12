@@ -10,16 +10,78 @@
   background-color: green;
 }
 
+#share-section {
+  float: right;
+}
+.row.headline {
+  margin-top: 10px;
+}
+.share-dialog {
+  background-color: white;
+  border-radius: 6px;
+  padding: 16px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  .title {
+    margin: 0;
+    margin-bottom: 10px;
+  }
+  .character-count {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+    float: right;
+  }
+  textarea {
+    border-radius: 6px;
+    width: 70%;
+    float: left;
+  }
+  .gif-preview-container {
+    width: 25%;
+    float:right;
+  }
+  .gif-input-container {
+    margin-bottom: 10px;
+    clear: both;
+  }
+  .gif-input-actions {
+    float: left;
+  }
+}
+
 .new-post-component {
   .button-area {
-    display: none;
+    pointer-events: none;
+    opacity: 0;
+    -webkit-transition: opacity 200ms;
+    transition: opacity 200ms;
+
+  }
+  .share-dialog, .gif-post-dialog-column {
+    height: 100%;
+  }
+  .share-dialog-container {
+    opacity: 1;
+    height: 160px;
+    -webkit-transition-property: height, opacity;
+    transition-property: height, opacity;
+    -webkit-transition-duration: 300ms, 200ms;
+    transition-duration: 300ms, 200ms;
+    -webkit-transition-delay: 0ms, 100ms;
+    transition-delay: 0ms, 100ms;
+    //-webkit-transition: opacity 200ms 300ms;
+    //transition: opacity 200ms 300ms;
   }
   &.initial {
     .button-area {
+      pointer-events: auto;
+      opacity: 1;
       display: block;
     }
     .share-dialog-container {
-      display: none;
+      height: 0px;
+      opacity: 0;
     }
     .gif-submit {
       @extend .disabled;
@@ -36,8 +98,14 @@
     .message {
       @include error-message;
     }
+    .share-dialog-container {
+      height: 180px;
+    }
   }
   &.success {
+    .share-dialog-container {
+      height: 180px;
+    }
     .share-gif-form {
       display: none;
     }
@@ -46,6 +114,11 @@
     }
   }
   &.is-invalid {
+    &.editing {
+      .share-dialog-container {
+        height: 180px;
+      }
+    }
     .gif-submit {
       @extend .disabled;
     }
@@ -53,4 +126,8 @@
       @include error-message;
     }
   }
+}
+
+.gif-list {
+  padding-top: 20px;
 }
