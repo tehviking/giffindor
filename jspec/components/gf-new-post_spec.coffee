@@ -2,6 +2,8 @@ describe 'new post component', ->
   beforeEach ->
     @component = App.__container__.lookup("component:gfNewPost").appendTo("body")
     @component.set "gifPost", App.store.createRecord("gifPost")
+    @component.set "defer", (callback, delay) =>
+      @deferredCallback = callback
   afterEach ->
     @component.destroy()
   it "exists", ->
@@ -26,6 +28,7 @@ describe 'new post component', ->
         fillIn @component.$("textarea#new-gif-body"), "thing: notagif.jpg"
         @component.get("gifPost").set("body", "thing: notagif.jpg")
         @component.$("textarea#new-gif-body").trigger("input")
+      afterEach ->
       it "binds to the model", ->
         expect(@component.get("gifPost.body")).to.equal "thing: notagif.jpg"
       it "leaves the save button disabled", ->
@@ -97,12 +100,12 @@ describe 'new post component', ->
               expect(@component.$("#gif-post-dialog .message")).to.be.visible
               expect(@component.$()).to.have.class "success"
               expect(@component.$("#gif-post-dialog .message").text()).to.equal "New gif posted: http://blah.com/cool-gif.gif"
-            # describe "after 5 seconds", ->
-            #   beforeEach ->
-            #     @clock.tick(6000)
-            #   it "resets to initial state", ->
-            #     expect(@component.$()).to.have.class "initial"
-            #     expect(@component.$("#gif-post-dialog .message").text()).to.equal ""
+            describe "after 5 seconds", ->
+              beforeEach ->
+                @deferredCallback()
+              it "resets to initial state", ->
+                expect(@component.$()).to.have.class "initial"
+                expect(@component.$("#gif-post-dialog .message").text()).to.equal ""
 
           describe "clicking submit with validation error", ->
             beforeEach ->
@@ -121,14 +124,12 @@ describe 'new post component', ->
               expect(@component.$()).not.to.have.class "success"
               expect(@component.$()).to.have.class "failure"
               expect(@component.$("#gif-post-dialog .message").text()).to.equal "LOL NOPE VALIDATION FAILZ"
-          #   describe "after 5 seconds", ->
-          #     beforeEach ->
-          #       @clock.tick(6000)
-          #     afterEach ->
-          #       @clock.restore()
-          #     it "resets to editing state", ->
-          #       expect(@component.$()).to.have.class "editing"
-          #       expect(@component.$("#gif-post-dialog .message").text()).to.equal ""
+            describe "after 5 seconds", ->
+              beforeEach ->
+                @deferredCallback.call()
+              it "resets to editing state", ->
+                expect(@component.$()).to.have.class "editing"
+                expect(@component.$("#gif-post-dialog .message").text()).to.equal ""
 
           describe "clicking submit with bad response", ->
             beforeEach ->

@@ -13,7 +13,11 @@ App.GfListPostsComponent = Ember.Component.extend({
   actions: {
     delete: function(gifPost) {
       if (confirm("Really delete this lovely gif?")) {
-        gifPost.destroyRecord();
+        gifPost.destroyRecord().then(function(result){
+          //message?
+        }, function(){
+          gifPost.rollback();
+        });
       }
     }
   }

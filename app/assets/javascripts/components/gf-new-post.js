@@ -24,11 +24,13 @@ App.GfNewPostComponent = Ember.Component.extend({
     this.set("message", message);
   }.observes("gifPost.body", "gifPost.isValid").on("init"),
 
+  defer: function(callback, delay) {
+    setTimeout(callback, delay);
+  },
   /* ACTIONS */
   actions: {
     showDialog: function() {
       this.set("formState", "editing");
-      $("#new-gif-body").val("");
     },
     cancel: function() {
       this.set("formState", "initial");
@@ -43,7 +45,7 @@ App.GfNewPostComponent = Ember.Component.extend({
         controller.set("formState", "success");
         controller.set("message", "New gif posted: " + gifPost.get("parsedUrl"));
 
-        setTimeout(function() {
+        controller.defer(function() {
           controller.set("message", "");
           controller.set("formState", "initial")
         }, 5000);
@@ -56,7 +58,7 @@ App.GfNewPostComponent = Ember.Component.extend({
         } else {
           controller.set("message", "There was an error posting your gif. Please wait and try again.")
         }
-        setTimeout(function() {
+        controller.defer(function() {
           controller.set("message", "");
           controller.set("formState", "editing")
         }, 5000);
