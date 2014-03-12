@@ -71,16 +71,17 @@ App.GfNewPostComponent = Ember.Component.extend({
   }.on("didInsertElement"),
 
   observeInputChanges: function(){
-    if (this.get("gifPost.isGif")) {
-      if (this.get("gifPost.isValid")) {
-        this.set("message", "");
-      } else {
-        this.set("message", "Your message is too long.");
-      }
-    } else {
-      this.set("message", "There is no valid gif link in this post.");
+    var message = ""
+    if (!this.get("gifPost.body")) {
+      message = ""
+    } else if (!this.get("gifPost.isValid") && !!this.get("gifPost.isGif")) {
+      message = "Your message is too long."
+      // otherwise if it's not valid it's not a gif
+    } else if (!this.get("gifPost.isValid")) {
+      message = "Please add a valid gif link to this post."
     }
-  }.observes("gifPost.body", "gifPost.isValid"),
+    this.set("message", message);
+  }.observes("gifPost.body", "gifPost.isValid").on("init"),
 
   /* ACTIONS */
   actions: {

@@ -70,7 +70,7 @@ describe 'new post component', ->
       it "displays a client-side validation error", ->
         expect(@component.$(".message")).to.be.visible
         expect(@component.$()).to.have.class("is-invalid")
-        expect(@component.$(".message").text()).to.match /no valid gif/
+        expect(@component.$(".message").text()).to.match /Please add a valid gif/
       it "does not display a preview section", ->
         expect(@component.$(".gif-preview")).not.to.exist
 
