@@ -4,11 +4,17 @@ App.GfListPostsComponent = Ember.Component.extend({
   gifPosts: null,
   classNames: ["list-posts-component"],
   persistedGifPosts: Ember.computed.filterBy("gifPosts", "isNew", false),
+  sortedPosts: function() {
+    // well this is a neat trick
+    return this.get("persistedGifPosts").sortBy("id:desc");
+  }.property("persistedGifPosts.@each"),
 
   /* ACTIONS */
   actions: {
     delete: function(gifPost) {
-      gifPost.destroyRecord();
+      if (confirm("Really delete this lovely gif?")) {
+        gifPost.destroyRecord();
+      }
     }
   }
 });

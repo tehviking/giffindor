@@ -10,6 +10,10 @@
   background-color: green;
 }
 
+h1.no-top-margin {
+  margin-top: 0px;
+}
+
 #share-section {
   float: right;
 }
@@ -104,7 +108,7 @@
   }
   &.success {
     .share-dialog-container {
-      height: 180px;
+      height: 80px;
     }
     .share-gif-form {
       display: none;
@@ -126,8 +130,4 @@
       @include error-message;
     }
   }
-}
-
-.gif-list {
-  padding-top: 20px;
 }

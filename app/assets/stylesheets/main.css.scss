@@ -42,11 +42,8 @@ img.framed {
   background-color: #ffe; 
 }
 
-h1.no-top-margin {
-  margin-top: 0px;
-}
-
 section.gif-list {
+  padding-top: 20px;
   article.gif-entry {
     border-bottom: 1px solid #ccc;
     margin: 10px 0;
