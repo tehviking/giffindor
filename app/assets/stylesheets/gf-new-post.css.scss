@@ -1,0 +1,34 @@
+//@import 'bootstrap/buttons';
+
+.new-post-component {
+  .button-area {
+    display: none;
+  }
+  &.initial {
+    .button-area {
+      display: block;
+    }
+    .share-dialog {
+      display: none;
+    }
+    .gif-submit {
+      @extend .disabled;
+    }
+  }
+  &.editing {
+  }
+  &.loading {
+    .gif-submit {
+      @extend .disabled;
+    }
+  }
+  &.failure {
+  }
+  &.success {
+  }
+  &.is-invalid {
+    .gif-submit {
+      @extend .disabled;
+    }
+  }
+}
