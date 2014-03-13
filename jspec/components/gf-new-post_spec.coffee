@@ -1,17 +1,18 @@
 describe 'new post component', ->
   beforeEach ->
-    @component = App.__container__.lookup("component:gfNewPost").appendTo("body")
+    @component = App.__container__.lookup("component:gfNewPost")
     @component.set "gifPost", App.store.createRecord("gifPost")
     @component.set "defer", (callback, delay) =>
       @deferredCallback = callback
+    @component.appendTo("body")
   afterEach ->
     @component.destroy()
   it "exists", ->
     expect(@component.get('element')).to.exist
     expect(@component.$('#gif-post-dialog')).to.exist
   it "doesn't show the dialog", ->
-    expect(@component.get("formState")).to.equal "initial"
-    # TODO: Enable after CSS is included in test
+    expect(@component.$()).to.have.class "initial"
+    # TODO: Enable after SCSS is included in test
     # expect(@component.$('.share-dialog-container'))
 
   describe "clicking the show dialog button", ->
@@ -20,16 +21,16 @@ describe 'new post component', ->
       @component.send "showDialog"
     it "shows the dialog", ->
       expect(@component.$('#gif-post-dialog')).to.be.visible
+      expect(@component.$()).to.have.class "editing"
 
     describe 'entering bad text into the gif box', ->
       beforeEach ->
-        # FIXME: EMBER PROBLEMS
-        # THIS IS AWFUL. This input is not binding back to the component model.
-        fillIn @component.$("textarea#new-gif-body"), "thing: notagif.jpg"
+        # FIXME: This input is not binding back to the component model.
+        # The model is binding into the input. This only happens in test.
+        # fillIn "textarea#new-gif-body", "thing: notagif.jpg"
         @component.get("gifPost").set("body", "thing: notagif.jpg")
-        @component.$("textarea#new-gif-body").trigger("input")
-      afterEach ->
       it "binds to the model", ->
+        expect(@component.$("textarea#new-gif-body").val()).to.equal "thing: notagif.jpg"
         expect(@component.get("gifPost.body")).to.equal "thing: notagif.jpg"
       it "leaves the save button disabled", ->
         expect(@component.$()).to.have.class "is-invalid"
@@ -90,9 +91,10 @@ describe 'new post component', ->
                     body: "thing: http://blah.com/cool-gif.gif"
                 jqXHR: {}
                 textStatus: 'success'
-              click "a.gif-submit"
-              # WTF EMBER. BIND YO SHIT.
+              # FIXME: Still no bindings from template to component
+              #click "a.gif-submit"
               @component.send "submit"
+              wait()
             afterEach ->
               @listComponent.destroy()
 
@@ -117,9 +119,10 @@ describe 'new post component', ->
                       url: ["LOL NOPE VALIDATION FAILZ"]
                   status: 422
                 textStatus: 'unprocessable entity'
-              click "a.gif-submit"
-              # WTF EMBER. BIND YO SHIT.
+              # FIXME: Still no bindings from template to component
+              # click "a.gif-submit"
               @component.send "submit"
+              wait()
             it "shows an error message", ->
               expect(@component.$()).not.to.have.class "success"
               expect(@component.$()).to.have.class "failure"
@@ -135,9 +138,10 @@ describe 'new post component', ->
             beforeEach ->
               ic.ajax.defineFixture '/gif_posts',
                 response: "BARF"
-              click "a.gif-submit"
-              # WTF EMBER. BIND YO SHIT.
+              # FIXME: Still no bindings from template to component
+              # click "a.gif-submit"
               @component.send "submit"
+              wait()
             it "shows an error message", ->
               expect(@component.$()).not.to.have.class "success"
               expect(@component.$()).to.have.class "failure"
@@ -157,13 +161,18 @@ describe 'new post component', ->
 describe "list posts component", ->
   beforeEach ->
     ic.ajax.defineFixture '/gif_posts',
-      response: {"gif_posts":[{"id":69,"url":"http://fake.com/cool.gif","body":"Play ball http://fake.com/cool.gif","username":"tehviking"}]}
+      response: {"gif_posts":[{"id":1,"url":"http://fake.com/cool.gif","body":"Play ball http://fake.com/cool.gif","username":"tehviking"}]}
       jqXHR: {}
       textStatus: 'success'
-    @component = App.__container__.lookup("component:gfListPosts").appendTo("body")
+    @component = App.GfListPostsComponent.create
+      container: App.__container__
+    @component.appendTo("body")
+
     App.store.find("gifPost").then (result) =>
-      @component.set "gifPosts", result
-      @gifPost = result.get("firstObject")
+      Ember.run =>
+        @gifPost = result.get("firstObject")
+        @component.set "gifPosts", result
+      wait()
   afterEach ->
     @component.destroy()
   it "exists", ->
@@ -171,14 +180,18 @@ describe "list posts component", ->
 
   it "lists the gifs", ->
     expect(@component.$("article.gif-entry:first .gif-entry-user").text().trim()).to.equal "Shared by tehviking"
-  # FIXME: this has async issues. It doesn't wait for the gifPost?
+
+  # FIXME: This doesn't work unless run in isolation. Punting on a fix for now.
   # describe "deleting a gif", ->
   #   beforeEach ->
+  #     ic.ajax.defineFixture '/gif_posts/1',
+  #       response: "deleted yo"
+  #       jqXHR: {}
+  #       textStatus: 'success'
+
   #     sinon.stub(window, "confirm").returns(true)
-  #     #@domGif = $("article.gif-entry:first")
-  #     #@deleteButton = $(@domGif).find(".gif-entry-delete [data-gif-delete]")
-  #     #$(@deleteButton).trigger("click")
   #     @component.send("delete", @gifPost)
+  #     wait()
   #   afterEach ->
   #     window.confirm.restore()
   #   it "removes the gif", ->

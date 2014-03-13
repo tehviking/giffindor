@@ -1,6 +1,5 @@
 chai.Assertion.includeStack = true
 Ember.testing = true
-Ember.Test.adapter = Ember.Test.MochaAdapter.create()
 App.setupForTesting()
 App.injectTestHelpers()
 

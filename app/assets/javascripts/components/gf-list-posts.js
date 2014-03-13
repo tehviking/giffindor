@@ -26,12 +26,14 @@ App.GfListPostsComponent = Ember.Component.extend({
 
 /* INITIALIZATION */
 $(document).ready(function() {
-  App.store.find("gifPost").then(function(result) {
-    $("#gif-posts-container").each(function(){
-      var component = App.GfListPostsComponent.create({
-        gifPosts: result
+  if ($("#gif-posts-container").length) {
+    App.store.find("gifPost").then(function(result) {
+      $("#gif-posts-container").each(function(){
+        var component = App.GfListPostsComponent.create({
+          gifPosts: result
+        });
+        component.replaceIn(this);
       });
-      component.replaceIn(this);
     });
-  });
+  }
 });

@@ -60,7 +60,7 @@ h1.no-top-margin {
     opacity: 0;
     -webkit-transition: opacity 200ms;
     transition: opacity 200ms;
-
+    display: block;
   }
   .share-dialog, .gif-post-dialog-column {
     height: 100%;
@@ -74,8 +74,6 @@ h1.no-top-margin {
     transition-duration: 300ms, 200ms;
     -webkit-transition-delay: 0ms, 100ms;
     transition-delay: 0ms, 100ms;
-    //-webkit-transition: opacity 200ms 300ms;
-    //transition: opacity 200ms 300ms;
   }
   &.initial {
     .button-area {
