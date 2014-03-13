@@ -3,9 +3,10 @@ App.GfListPostsComponent = Ember.Component.extend({
   layoutName: "components/gf-list-posts",
   gifPosts: null,
   classNames: ["list-posts-component"],
+  // We only want to show posts that are saved to the server
   persistedGifPosts: Ember.computed.filterBy("gifPosts", "isNew", false),
   sortedPosts: function() {
-    // well this is a neat trick
+    // well this is a neat trick, sort in reverse ID order
     return this.get("persistedGifPosts").sortBy("id:desc");
   }.property("persistedGifPosts.@each"),
 

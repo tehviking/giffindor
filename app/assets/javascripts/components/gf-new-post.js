@@ -8,26 +8,30 @@ App.GfNewPostComponent = Ember.Component.extend({
   // FORM-STATES: "initial", "editing", "loading", "failure", "success"
   isValid: Ember.computed.alias("gifPost.isValid"),
   isInvalid: Ember.computed.not("isValid"),
-  message: "",
 
   /* OBSERVERS */
-  observeInputChanges: function(){
-    var message = ""
-    if (!this.get("gifPost.body")) {
-      message = ""
-    } else if (!this.get("gifPost.isValid") && !!this.get("gifPost.isGif")) {
-      message = "Your message is too long."
-      // otherwise if it's not valid it's not a gif
-    } else if (!this.get("gifPost.isValid")) {
-      message = "Please add a valid gif link to this post."
+  // This computes the displayed message for all success/failure
+  message: function(){
+    var formState = this.get("formState")
+    // On failure, delegate message to the object
+    if (formState === "failure") {
+      return this.get("gifPost.message");
+      // On success, just scream real loud!
+    } else if (formState === "success") {
+      return "New gif posted: " + this.get("gifPost.parsedUrl")
+      // If it's invalid but has a gif, it's too long:
+    } else if (this.get("isInvalid") && !!this.get("gifPost.isGif")) {
+      return "Your message is too long.";
+      // Otherwise if it's not valid it's not a gif
+    } else if (this.get("isInvalid")) {
+      return "Please add a valid gif link to this post.";
+    } else {
+      return null;
     }
-    this.set("message", message);
-  }.observes("gifPost.body", "gifPost.isValid").on("init"),
+  }.property("formState", "isInvalid", "gifPost.isGif", "gifPost.message"),
 
-  defer: function(callback, delay) {
-    setTimeout(callback, delay);
-  },
   /* ACTIONS */
+  // These actions are primarily about pushing state around.
   actions: {
     showDialog: function() {
       this.set("formState", "editing");
@@ -43,27 +47,29 @@ App.GfNewPostComponent = Ember.Component.extend({
       gifPost.save().then(function(data) {
         // Success
         controller.set("formState", "success");
-        controller.set("message", "New gif posted: " + gifPost.get("parsedUrl"));
-
         controller.defer(function() {
-          controller.set("message", "");
           controller.set("formState", "initial")
         }, 5000);
       // Failure
       }, function(data) {
         controller.set("formState", "failure");
         if (!!data.jqXHR && data.jqXHR.status == 422) {
-          //422: validation error
-          controller.set("message", data.jqXHR.responseJSON.errors.url[0]);
+          // 422: validation error
+          controller.get("gifPost").set("message", data.jqXHR.responseJSON.errors.url[0]);
         } else {
-          controller.set("message", "There was an error posting your gif. Please wait and try again.")
+          controller.get("gifPost").set("message", "There was an error posting your gif. Please wait and try again.")
         }
         controller.defer(function() {
-          controller.set("message", "");
           controller.set("formState", "editing")
         }, 5000);
       });
     }
+  },
+
+  /* FUNCTIONS */
+  // Allow injectable setTimeout override for testing
+  defer: function(callback, delay) {
+    setTimeout(callback, delay);
   }
 });
 

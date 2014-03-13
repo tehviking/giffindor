@@ -3,6 +3,7 @@ App.GifPost = DS.Model.extend({
   body: DS.attr("string"),
   url: DS.attr("string"),
   username: DS.attr("string"),
+  message: null,
 
   parsedUrl: function() {
     if (!!this.get("body")) {
@@ -28,10 +29,13 @@ App.GifPost = DS.Model.extend({
   }.property("id"),
 
   /* OBSERVERS */
+  // Copy the computed parsedUrl into the canonical url to send to the server
   setUrl: function() {
     this.set("url", this.get("parsedUrl"));
   }.observes("parsedUrl"),
 
+  /* MISC */
+  // This property is at the end basically because it breaks Emacs auto-indent :/
   regex: function() {
     return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
    }.property()
