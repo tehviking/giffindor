@@ -1,10 +1,12 @@
 App.GifPost = DS.Model.extend({
   /* PROPERTIES */
+  favorites: DS.hasMany("favorite"),
   body: DS.attr("string"),
   url: DS.attr("string"),
   username: DS.attr("string"),
+  currentUserFavoriteId: DS.attr("string"),
   message: null,
-
+  isFavorited: Ember.computed.notEmpty("currentUserFavoriteId"),
   parsedUrl: function() {
     if (!!this.get("body")) {
       var matches = this.get("body").match(this.get("regex"))

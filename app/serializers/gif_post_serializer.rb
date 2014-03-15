@@ -1,7 +1,13 @@
 class GifPostSerializer < ActiveModel::Serializer
-  attributes :id, :url, :body, :username
+  embed :ids, include: true
+  attributes :id, :url, :body, :username, :current_user_favorite_id
+  has_many :favorites
 
   def username
     object.user.username
+  end
+
+  def current_user_favorite_id
+    object.favorites.find_by(user: current_user).try :id
   end
 end

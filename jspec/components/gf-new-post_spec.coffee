@@ -180,7 +180,18 @@ describe "list posts component", ->
 
   it "lists the gifs", ->
     expect(@component.$("article.gif-entry:first .gif-entry-user").text().trim()).to.equal "Shared by tehviking"
+  describe "favoriting a post", ->
+    beforeEach ->
+      ic.ajax.defineFixture '/favorites',
+        response: {foo: "bar"}
+        jqXHR: {}
+        textStatus: 'success'
 
+      @component.send("favorite", @gifPost)
+    it.only "favorites the post", ->
+      expect($("article.gif-entry")).to.have.class "is-favorited"
+    it "lists the favorite count", ->
+      expect($("article.gif-entry .favorite-count").text()).to.equal "999"
   # FIXME: This doesn't work unless run in isolation. Punting on a fix for now.
   # describe "deleting a gif", ->
   #   beforeEach ->

@@ -1,21 +1,34 @@
-{{#each gifPost in sortedPosts}}
+<div {{bind-attr class=":gif-list-filter displayFilter"}}>
+  Show:
+  <a class="filter-all" href="" {{action "applyFilter" null}}>All</a>
+  <a class="filter-faved" href="" {{action "applyFilter" "faved"}}>Favorites</a>
+</div>
+{{#each filteredPosts}}
   <article class="gif-entry" data-gif-entry >
+    <div class="gif-entry-fav">
+      <span class="gif-entry-fav-count">
+        {{favorites.length}}
+      </span>
+      <a class="gif-entry-fav-link" {{action "toggleFav" this}}>
+        <i {{bind-attr class="isFavorited :fav-star"}}></i>
+      </a>
+    </div>
     <div class="gif-entry-image">
-      <img class="framed" {{bind-attr src=gifPost.parsedUrl}}>
+      <img class="framed" {{bind-attr src=parsedUrl}}>
     </div>
     <div class="gif-entry-body">
-      {{gifPost.body}}
+      {{body}}
     </div>
     <div class="gif-entry-delete">
-      <a class="btn btn-danger" data-gif-delete {{action "delete" gifPost}}  rel="nofollow">
+      <a class="btn btn-danger" data-gif-delete {{action "delete" this}}  rel="nofollow">
         Delete
       </a>
     </div>
     <div class="gif-entry-user">
-      Shared by {{gifPost.username}}
+      Shared  by {{username}}
     </div>
     <div class="gif-entry-permalink">
-      <a {{bind-attr href=gifPost.permalink}}>
+      <a href="#"{{bind-attr href=permalink}}>
         Permalink
       </a>
     </div>

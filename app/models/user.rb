@@ -6,4 +6,5 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   validates_presence_of :username
   has_many :gif_posts
+  has_many :favorites
 end

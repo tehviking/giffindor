@@ -10,6 +10,53 @@
   background-color: green;
 }
 
+.gif-entry-fav {
+  float: right;
+}
+
+.gif-entry-fav-link {
+  float: left;
+}
+
+.gif-entry-fav-count {
+  font-size: 18px;
+  display: block;
+  float: left;
+  padding: 0 6px 0 0;
+}
+
+.gif-list-filter {
+  .filter-all {
+    color: black;
+    cursor: default;
+    text-decoration: none;
+  }
+  &.faved {
+    .filter-all {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+
+    }
+    .filter-faved {
+      color: black;
+      cursor: default;
+      text-decoration: none;
+    }
+  }
+}
+
+i.fav-star {
+  @extend .fa;
+  @extend .fa-star-o;
+  font-size: 26px;
+  color: black;
+  &.is-favorited {
+    @extend .fa-star;
+    color: $gold;
+  }
+}
+
 h1.no-top-margin {
   margin-top: 0px;
 }
