@@ -3,6 +3,7 @@ App.GifPost = DS.Model.extend({
   body: DS.attr("string"),
   url: DS.attr("string"),
   username: DS.attr("string"),
+  createdAt: DS.attr("date"),
   message: null,
 
   parsedUrl: function() {

@@ -1,4 +1,4 @@
-{{#each gifPost in sortedPosts}}
+{{#each gifPost in persistedGifPosts}}
   <article class="gif-entry" data-gif-entry >
     <div class="gif-entry-image">
       <img class="framed" {{bind-attr src=gifPost.parsedUrl}}>

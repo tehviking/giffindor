@@ -1,5 +1,6 @@
 class GifPostSerializer < ActiveModel::Serializer
-  attributes :id, :url, :body, :username
+  embed :ids, include: true
+  attributes :id, :url, :body, :username, :created_at
 
   def username
     object.user.username
