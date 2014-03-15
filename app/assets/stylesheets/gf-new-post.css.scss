@@ -93,7 +93,6 @@ h1.no-top-margin {
     float:right;
   }
   .gif-input-container {
-    margin-bottom: 10px;
     clear: both;
   }
   .gif-input-actions {
@@ -137,6 +136,9 @@ h1.no-top-margin {
     }
   }
   &.editing {
+    p.character-count {
+      margin-top: -10px;
+    }
   }
   &.loading {
     .gif-submit {
@@ -173,6 +175,9 @@ h1.no-top-margin {
     }
     .message {
       @include error-message;
+    }
+    .gif-input-actions {
+      margin-top: 10px;
     }
   }
 }

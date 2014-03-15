@@ -49,6 +49,7 @@ App.GfNewPostComponent = Ember.Component.extend({
         controller.set("formState", "success");
         controller.defer(function() {
           controller.set("formState", "initial")
+          controller.set("gifPost", App.store.createRecord("gifPost"));
         }, 5000);
       // Failure
       }, function(data) {
