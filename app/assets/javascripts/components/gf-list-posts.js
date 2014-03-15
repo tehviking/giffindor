@@ -1,31 +1,37 @@
 App.GfListPostsComponent = Ember.Component.extend({
-  /* PROPERTIES */
   layoutName: "components/gf-list-posts",
   gifPosts: null,
   classNames: ["list-posts-component"],
+
+  /* PROPERTIES */
   // We only want to show posts that are saved to the server
   persistedGifPosts: Ember.computed.filterBy("gifPosts", "isNew", false),
 
+  // Then sort them in reverse createdAt order
   sortedPosts: function() {
-    // well this is a neat trick, sort in reverse ID order
-    return this.get("persistedGifPosts").sortBy("id:desc");
-  }.property("persistedGifPosts.@each"),
+    // Sort in reverse createdAt order
+    return this.get("persistedGifPosts").sortBy("createdAt").reverseObjects()
+  }.property("persistedGifPosts.@each.createdAt"),
 
+  // Then allow filtering by whether a post is faved by current user
   favedPosts: Ember.computed.filterBy("sortedPosts", "isFavorited", true),
 
+  // Then filter on the displayFilter property
   filteredPosts: function() {
     if (this.get("displayFilter") == "faved") {
       return this.get("favedPosts");
     } else {
-      return this.get("persistedGifPosts");
+      return this.get("sortedPosts");
     }
   }.property("favedPosts", "displayFilter"),
 
   /* ACTIONS */
   actions: {
+    // Set or remove the filter for filteredPosts
     applyFilter: function(filter) {
       this.set("displayFilter", filter)
     },
+    // Submit or delete a fav object for this post
     toggleFav: function(gifPost) {
       if (gifPost.get("isFavorited")) {
         var favId = gifPost.get("currentUserFavoriteId")
@@ -44,7 +50,6 @@ App.GfListPostsComponent = Ember.Component.extend({
           fav.rollback();
         });
       }
-    //   }
     },
     delete: function(gifPost) {
       if (confirm("Really delete this lovely gif?")) {

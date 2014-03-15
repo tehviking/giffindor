@@ -5,6 +5,7 @@ App.GifPost = DS.Model.extend({
   url: DS.attr("string"),
   username: DS.attr("string"),
   currentUserFavoriteId: DS.attr("string"),
+  createdAt: DS.attr("date"),
   message: null,
   isFavorited: Ember.computed.notEmpty("currentUserFavoriteId"),
   parsedUrl: function() {
