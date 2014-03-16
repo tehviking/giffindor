@@ -94,7 +94,6 @@ describe 'new post component', ->
               # FIXME: Still no bindings from template to component
               #click "a.gif-submit"
               @component.send "submit"
-              wait()
             afterEach ->
               @listComponent.destroy()
 
@@ -122,7 +121,6 @@ describe 'new post component', ->
               # FIXME: Still no bindings from template to component
               # click "a.gif-submit"
               @component.send "submit"
-              wait()
             it "shows an error message", ->
               expect(@component.$()).not.to.have.class "success"
               expect(@component.$()).to.have.class "failure"
@@ -141,7 +139,6 @@ describe 'new post component', ->
               # FIXME: Still no bindings from template to component
               # click "a.gif-submit"
               @component.send "submit"
-              wait()
             it "shows an error message", ->
               expect(@component.$()).not.to.have.class "success"
               expect(@component.$()).to.have.class "failure"
@@ -172,7 +169,6 @@ describe "list posts component", ->
       Ember.run =>
         @gifPost = result.get("firstObject")
         @component.set "gifPosts", result
-      wait()
   afterEach ->
     @component.destroy()
   it "exists", ->
@@ -188,22 +184,23 @@ describe "list posts component", ->
         textStatus: 'success'
 
       @component.send("favorite", @gifPost)
-    it.only "favorites the post", ->
+      wait()
+    it "favorites the post", ->
       expect($("article.gif-entry")).to.have.class "is-favorited"
     it "lists the favorite count", ->
       expect($("article.gif-entry .favorite-count").text()).to.equal "999"
-  # FIXME: This doesn't work unless run in isolation. Punting on a fix for now.
-  # describe "deleting a gif", ->
-  #   beforeEach ->
-  #     ic.ajax.defineFixture '/gif_posts/1',
-  #       response: "deleted yo"
-  #       jqXHR: {}
-  #       textStatus: 'success'
+  describe "deleting a gif", ->
+    beforeEach ->
+      ic.ajax.defineFixture '/gif_posts/1',
+        response: null
+        jqXHR: {}
+        textStatus: 'success'
 
-  #     sinon.stub(window, "confirm").returns(true)
-  #     @component.send("delete", @gifPost)
-  #     wait()
-  #   afterEach ->
-  #     window.confirm.restore()
-  #   it "removes the gif", ->
-  #     expect($("article.gif-entry")).not.to.exist
+      sinon.stub(window, "confirm").returns(true)
+      @component.send("delete", @gifPost)
+      wait()
+    afterEach ->
+      window.confirm.restore()
+    it "removes the gif", (done) ->
+      expect($("article.gif-entry")).not.to.exist
+      done()

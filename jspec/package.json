@@ -8,7 +8,7 @@
     "karma-qunit": "*",
     "karma-mocha": "*",
     "karma-chai": "*",
-    "karma": "0.10.9"
+    "karma": "0.10.10"
   },
   "devDependencies": {
     "karma-sinon-chai": "~0.1.4"
