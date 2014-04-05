@@ -1,5 +1,6 @@
 describe 'new post component', ->
   beforeEach ->
+    App.advanceReadiness()
     @component = App.__container__.lookup("component:gfNewPost")
     @component.set "gifPost", App.store.createRecord("gifPost")
     @component.set "defer", (callback, delay) =>
@@ -25,10 +26,7 @@ describe 'new post component', ->
 
     describe 'entering bad text into the gif box', ->
       beforeEach ->
-        # FIXME: This input is not binding back to the component model.
-        # The model is binding into the input. This only happens in test.
-        # fillIn "textarea#new-gif-body", "thing: notagif.jpg"
-        @component.get("gifPost").set("body", "thing: notagif.jpg")
+        fillIn "textarea#new-gif-body", "thing: notagif.jpg"
       it "binds to the model", ->
         expect(@component.$("textarea#new-gif-body").val()).to.equal "thing: notagif.jpg"
         expect(@component.get("gifPost.body")).to.equal "thing: notagif.jpg"
@@ -48,7 +46,6 @@ describe 'new post component', ->
       describe 'putting too much text in the box', ->
         beforeEach ->
           fillIn @component.$("textarea#new-gif-body"), "thing: http://blah.com/cool-gif.gif This is a thing which is pretty cool except the text is too long. Maybe this is going to display a nice error message for people to enjoy"
-          @component.get("gifPost").set("body", "thing: http://blah.com/cool-gif.gif This is a thing which is pretty cool except the text is too long. Maybe this is going to display a nice error message for people to enjoy")
           @component.$("textarea#new-gif-body").trigger("input")
         it "disables the save button", ->
           expect(@component.$()).to.have.class "is-invalid"
@@ -65,8 +62,6 @@ describe 'new post component', ->
         describe 'entering good text into the gif box', ->
           beforeEach ->
             fillIn @component.$("textarea#new-gif-body"), "thing: http://blah.com/cool-gif.gif"
-            @component.$("textarea#new-gif-body").trigger("input")
-            @component.get("gifPost").set("body", "thing: http://blah.com/cool-gif.gif")
           it "enables the save button", ->
             expect(@component.$("a.gif-submit")).not.to.have.attr("disabled")
           it "counts characters, minus the gif input", ->
@@ -91,9 +86,7 @@ describe 'new post component', ->
                     body: "thing: http://blah.com/cool-gif.gif"
                 jqXHR: {}
                 textStatus: 'success'
-              # FIXME: Still no bindings from template to component
-              #click "a.gif-submit"
-              @component.send "submit"
+              click "a.gif-submit"
             afterEach ->
               @listComponent.destroy()
 
@@ -117,9 +110,7 @@ describe 'new post component', ->
                       url: ["LOL NOPE VALIDATION FAILZ"]
                   status: 422
                 textStatus: 'unprocessable entity'
-              # FIXME: Still no bindings from template to component
-              # click "a.gif-submit"
-              @component.send "submit"
+              click "a.gif-submit"
             it "shows an error message", ->
               expect(@component.$()).not.to.have.class "success"
               expect(@component.$()).to.have.class "failure"
@@ -135,9 +126,7 @@ describe 'new post component', ->
             beforeEach ->
               ic.ajax.defineFixture '/gif_posts',
                 response: "BARF"
-              # FIXME: Still no bindings from template to component
-              # click "a.gif-submit"
-              @component.send "submit"
+              click "a.gif-submit"
             it "shows an error message", ->
               expect(@component.$()).not.to.have.class "success"
               expect(@component.$()).to.have.class "failure"
@@ -156,6 +145,7 @@ describe 'new post component', ->
 
 describe "list posts component", ->
   beforeEach ->
+    App.advanceReadiness()
     ic.ajax.defineFixture '/gif_posts',
       response:
         favorites: [
