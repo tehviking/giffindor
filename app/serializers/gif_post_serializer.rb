@@ -8,6 +8,6 @@ class GifPostSerializer < ActiveModel::Serializer
   end
 
   def current_user_favorite_id
-    object.favorites.find_by(user: current_user).try :id
+    object.favorites.find_by(user_id: current_user.id).try :id
   end
 end
