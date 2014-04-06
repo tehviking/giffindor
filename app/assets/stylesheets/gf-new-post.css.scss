@@ -98,6 +98,11 @@ h1.no-top-margin {
   .gif-input-actions {
     float: left;
   }
+  .message {
+    margin: -5px 0 5px 0;
+    border-radius: 5px;
+    width: 70%;
+  }
 }
 
 .new-post-component {

@@ -3,7 +3,7 @@
   <a class="filter-all" href="" {{action "applyFilter" null}}>All</a>
   <a class="filter-faved" href="" {{action "applyFilter" "faved"}}>Favorites</a>
 </div>
-{{#each sortedPosts}}
+{{#each filteredPosts}}
   <article class="gif-entry" data-gif-entry >
     <div class="gif-entry-fav">
       <span class="gif-entry-fav-count">
